@@ -14,6 +14,10 @@ docker compose up -d --build
 
 Abrí http://localhost:3000. La primera vez, el servicio `migrate` crea las tablas y carga una escuela de prueba.
 
+Usuarios de la escuela de prueba: `admin@escuela.test` (administración), `mlopez@escuela.test` y `aferreyra@escuela.test` (docentes), y cinco alumnos `nombre.apellido@escuela.test`. Todos usan la contraseña de `SEED_DEMO_PASSWORD` en `.env`.
+
+Sin `RESEND_API_KEY`, los emails (bienvenida, consentimiento, recuperación) no se envían: se escriben en el log del worker con su enlace (`docker compose logs worker`).
+
 | Servicio | Dirección |
 | --- | --- |
 | Aplicación | http://localhost:3000 |

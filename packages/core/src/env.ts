@@ -15,6 +15,20 @@ export const env = {
   get databaseUrl() {
     return required("DATABASE_URL");
   },
+  get appUrl() {
+    return (optional("APP_URL") ?? "http://localhost:3000").replace(/\/$/, "");
+  },
+  get mailFrom() {
+    return optional("MAIL_FROM") ?? "Fertelligence <avisos@example.com>";
+  },
+  google: {
+    get clientId() {
+      return optional("GOOGLE_CLIENT_ID");
+    },
+    get clientSecret() {
+      return optional("GOOGLE_CLIENT_SECRET");
+    },
+  },
   get schoolName() {
     return optional("SCHOOL_NAME") ?? "Escuela de prueba";
   },

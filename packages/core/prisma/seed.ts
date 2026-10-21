@@ -1,6 +1,7 @@
 // Datos de ejemplo: una escuela de prueba con un administrador, dos docentes, cinco alumnos
 // y una tarea de cada tipo. Es idempotente: si la escuela ya existe, no hace nada.
 import { Prisma, PrismaClient, type TaskType } from "@prisma/client";
+import { hashPassword } from "../src/auth/password";
 import { env } from "../src/env";
 import { ensureBucket } from "../src/storage";
 import { taskTypeSchemas } from "../src/task-types";
@@ -95,6 +96,7 @@ async function main() {
 
   if (await prisma.schoolSettings.findUnique({ where: { id: 1 } })) {
     console.log("[seed] La escuela ya existe; no se cargan datos de ejemplo.");
+    await setDemoPasswords();
     return;
   }
 
@@ -198,6 +200,17 @@ async function main() {
   });
 
   console.log("[seed] Escuela de prueba creada: 1 administrador, 2 docentes, 5 alumnos, 5 tareas por alumno.");
+  await setDemoPasswords();
+}
+
+// Solo para la escuela de prueba: si SEED_DEMO_PASSWORD está definida, los usuarios de ejemplo
+// (emails @escuela.test) sin contraseña reciben esa. Nunca toca cuentas reales.
+async function setDemoPasswords() {
+  const password = process.env.SEED_DEMO_PASSWORD;
+  if (!password) return;
+  const passwordHash = await hashPassword(password);
+  const { count } = await prisma.user.updateMany({ where: { email: { endsWith: "@escuela.test" }, passwordHash: null }, data: { passwordHash } });
+  if (count) console.log(`[seed] Contraseña de prueba asignada a ${count} usuarios de ejemplo (variable SEED_DEMO_PASSWORD).`);
 }
 
 main()
