@@ -1,4 +1,8 @@
+import { prisma } from "@fertelligence/core/db";
+import { readPreferences } from "@fertelligence/core/services/attempts";
+import { logoutAction } from "@/app/(public)/actions";
 import { ActionForm, SubmitButton } from "@/components/action-form";
+import { StudentPreferencesCard } from "./student-preferences";
 import { Button, Card, PageHeader } from "@/components/ui";
 import { requireUser } from "@/lib/session";
 import { logoutEverywhereAction, saveThemeAction, sendPasswordLinkAction } from "./actions";
@@ -14,9 +18,19 @@ const themes = [
 
 export default async function ProfilePage() {
   const user = await requireUser();
+  const profile = user.role === "STUDENT" ? await prisma.studentProfile.findUnique({ where: { userId: user.id } }) : null;
   return (
     <>
-      <PageHeader title="Mi perfil" subtitle={`${user.firstName} ${user.lastName} · ${user.email}`} />
+      <PageHeader
+        title="Mi perfil"
+        subtitle={`${user.firstName} ${user.lastName} · ${user.email}`}
+        actions={
+          <form action={logoutAction}>
+            <Button type="submit">Salir</Button>
+          </form>
+        }
+      />
+      {user.role === "STUDENT" && <StudentPreferencesCard prefs={readPreferences(profile?.preferences)} />}
       <div className="grid gap-4 md:grid-cols-2">
         <Card title="Tema">
           <ActionForm action={saveThemeAction}>
