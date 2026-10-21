@@ -7,6 +7,7 @@ export const QUEUES = {
   ping: "system.ping",
   email: "email.send",
   consentReminders: "consent.reminders",
+  taskTick: "tasks.tick",
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];

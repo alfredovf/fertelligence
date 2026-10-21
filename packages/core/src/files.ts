@@ -30,6 +30,21 @@ export async function storeFile(buffer: Buffer, uploadedById: string): Promise<{
   return { ok: true, id: file.id };
 }
 
+// Quién puede ver un archivo: administradores y docentes (uso interno de la escuela), quien lo subió,
+// y un alumno solo si la imagen está en una tarea asignada a él.
+export async function canViewFile(user: { id: string; role: string }, fileId: string): Promise<boolean> {
+  if (user.role === "ADMIN" || user.role === "TEACHER") return true;
+  const file = await prisma.file.findUnique({ where: { id: fileId }, select: { uploadedById: true } });
+  if (!file) return false;
+  if (file.uploadedById === user.id) return true;
+  const rows = await prisma.$queryRaw<{ n: bigint }[]>`
+    SELECT count(*) AS n FROM template_items i
+    JOIN tasks t ON t.template_id = i.template_id AND t.status <> 'DRAFT' AND t.status <> 'SCHEDULED'
+    JOIN assignments a ON a.id = t.assignment_id AND a.student_id = ${user.id}::uuid
+    WHERE i.image_file_id = ${fileId}::uuid OR i.content::text LIKE ${`%${fileId}%`}`;
+  return Number(rows[0]?.n ?? 0) > 0;
+}
+
 export async function readFile(id: string) {
   const file = await prisma.file.findUnique({ where: { id } });
   if (!file) return null;

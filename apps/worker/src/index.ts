@@ -3,6 +3,7 @@ import { prisma } from "@fertelligence/core/db";
 import { sendEmail } from "@fertelligence/core/email/send";
 import type { EmailMessage } from "@fertelligence/core/email/templates";
 import { sendDueConsentReminders } from "@fertelligence/core/services/consent";
+import { tickTaskStatuses } from "@fertelligence/core/services/tasks";
 
 // Worker: procesa la cola de trabajos. Las próximas etapas suman IA, Classroom, PDF y el paso de tareas a Vencida.
 async function main() {
@@ -22,6 +23,14 @@ async function main() {
     const sent = await sendDueConsentReminders();
     console.log(`[worker] Recordatorios de consentimiento enviados: ${sent}`);
   });
+
+  // Estados por fecha: Programada → Nueva al llegar el inicio; Nueva o En progreso → Vencida al pasar la entrega
+  await boss.schedule(QUEUES.taskTick, "*/5 * * * *", {}, { tz: "America/Argentina/Buenos_Aires" });
+  await boss.work(QUEUES.taskTick, async () => {
+    const { opened, overdue } = await tickTaskStatuses();
+    if (opened || overdue) console.log(`[worker] Tareas disponibles: ${opened} · vencidas: ${overdue}`);
+  });
+  await tickTaskStatuses(); // al arrancar, para no esperar al primer ciclo
 
   console.log(`[worker] Escuchando: ${Object.values(QUEUES).join(", ")}`);
 

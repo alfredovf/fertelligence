@@ -90,7 +90,7 @@ export default async function StudentPage({ params, searchParams }: { params: Pr
                 </p>
                 <p className="text-muted">Política de privacidad versión {valid.legalDocument.version}.</p>
                 {valid.evidenceFileId && (
-                  <a href={`/admin/archivos/${valid.evidenceFileId}`} target="_blank" rel="noreferrer">
+                  <a href={`/archivos/${valid.evidenceFileId}`} target="_blank" rel="noreferrer">
                     Ver formulario firmado
                   </a>
                 )}

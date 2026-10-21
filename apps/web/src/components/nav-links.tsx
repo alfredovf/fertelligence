@@ -7,7 +7,10 @@ export type NavItem = { href: string; label: string; badge?: number };
 
 export function NavLinks({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
-  const isActive = (href: string) => pathname === href || (href.split("/").length > 2 && pathname.startsWith(`${href}/`));
+  // Se marca solo el enlace que mejor coincide (el más largo), así "Tareas" no queda marcado en "Nueva tarea".
+  const matches = (href: string) => pathname === href || (href.split("/").length > 2 && pathname.startsWith(`${href}/`));
+  const best = [...items].filter((i) => matches(i.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
+  const isActive = (href: string) => href === best || (href === "/perfil" && pathname === "/perfil");
   return (
     <nav aria-label="Principal" className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:overflow-visible md:pb-0">
       {[...items, { href: "/perfil", label: "Mi perfil" }].map((item) => {
