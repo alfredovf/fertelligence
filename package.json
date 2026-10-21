@@ -1,0 +1,22 @@
+{
+  "name": "fertelligence",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @fertelligence/web",
+    "dev:worker": "npm run dev -w @fertelligence/worker",
+    "build": "npm run build -w @fertelligence/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "db:generate": "npm run db:generate -w @fertelligence/core",
+    "db:migrate": "npm run db:migrate -w @fertelligence/core",
+    "db:deploy": "npm run db:deploy -w @fertelligence/core",
+    "db:seed": "npm run db:seed -w @fertelligence/core"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

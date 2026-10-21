@@ -1,0 +1,1506 @@
+<title>Fertelligence · Alcance y mockups</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: documento de especificación con índice lateral fijo; los mockups viven en marcos con scroll horizontal propio */
+:root{
+  --bg:#f4f6fa; --paper:#ffffff; --sunk:#eef1f7; --ink:#1b2236; --muted:#5b6480; --line:#dce1eb;
+  --accent:#3346c8; --accent-ink:#ffffff; --accent-soft:#e7eafc;
+  --sun:#f2b632; --sun-soft:#fdf3d8;
+  --ok:#1d8656; --ok-soft:#e1f3e9; --warn:#a96e12; --warn-soft:#fbf0dc; --bad:#c03d37; --bad-soft:#fbe4e2;
+  --f-display:"Lexend",system-ui,sans-serif; --f-body:"Atkinson Hyperlegible",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:10px; --bezel:#1b2236;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11141d; --paper:#1a1f2d; --sunk:#151a26; --ink:#e7eaf3; --muted:#9aa3bc; --line:#2c3348;
+  --accent:#8a98ff; --accent-ink:#11141d; --accent-soft:#252c55;
+  --sun:#f2c45c; --sun-soft:#3a3018;
+  --ok:#4ec48b; --ok-soft:#163226; --warn:#e2aa4c; --warn-soft:#382c16; --bad:#f07b73; --bad-soft:#3b1f1e; --bezel:#3a4260;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11141d; --paper:#1a1f2d; --sunk:#151a26; --ink:#e7eaf3; --muted:#9aa3bc; --line:#2c3348;
+  --accent:#8a98ff; --accent-ink:#11141d; --accent-soft:#252c55;
+  --sun:#f2c45c; --sun-soft:#3a3018;
+  --ok:#4ec48b; --ok-soft:#163226; --warn:#e2aa4c; --warn-soft:#382c16; --bad:#f07b73; --bad-soft:#3b1f1e; --bezel:#3a4260;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+.wrap{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;max-width:1280px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr);gap:24px}.toc{position:static!important;max-height:none!important}}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;max-height:calc(100vh - 48px);overflow:auto;font-size:14px}
+.toc .brand{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.01em;margin-bottom:4px}
+.toc .brand span{color:var(--accent)}
+.toc p{color:var(--muted);margin:0 0 20px;font-size:13px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.toc a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none}
+.toc a:hover,.toc a:focus-visible{background:var(--accent-soft);outline:none}
+.toc .sub a{padding-left:22px;color:var(--muted);font-size:13px}
+main{min-width:0}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,4vw,44px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:28px;font-weight:600;letter-spacing:-.01em;margin-bottom:12px}
+h3{font-size:19px;font-weight:600;margin-bottom:8px}
+h4{font-size:15px;font-weight:600}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+section{padding-block:40px;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0;padding-top:0}
+.lead{font-size:19px;max-width:68ch;color:var(--ink)}
+p,li{max-width:72ch}
+.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:0}
+.card h3{font-size:17px}
+.card ul{margin:6px 0 0;padding-left:18px}
+.card li{margin-bottom:4px}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 7px;border-radius:5px;vertical-align:2px;white-space:nowrap}
+.t-req{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.t-mvp{background:var(--accent-soft);color:var(--accent)}
+.t-f2{background:var(--sun-soft);color:var(--warn)}
+.t-f3{background:var(--sunk);color:var(--muted)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table.doc{border-collapse:collapse;width:100%;font-size:14.5px}
+table.doc th,table.doc td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+table.doc th{font-family:var(--f-display);font-weight:600;font-size:13px;background:var(--sunk)}
+table.doc tr:last-child td{border-bottom:0}
+.yes{color:var(--ok);font-weight:700}.no{color:var(--muted)}
+pre.mermaid{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;overflow-x:auto}
+.note{background:var(--sun-soft);border:1px solid color-mix(in srgb,var(--sun) 40%,transparent);border-radius:var(--r);padding:14px 18px;margin:16px 0}
+.note b{font-family:var(--f-display)}
+.steps{counter-reset:s;list-style:none;padding:0;display:grid;gap:10px}
+.steps li{counter-increment:s;position:relative;padding-left:40px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--f-display);font-weight:600;font-size:13px;display:grid;place-items:center}
+
+/* ---------- Mockups ---------- */
+.role-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:36px 0 8px}
+.role-head h3{font-size:22px;margin:0}
+.mock{margin:28px 0 0}
+.mock figcaption{display:flex;gap:12px;align-items:baseline;margin-bottom:10px;flex-wrap:wrap}
+.mock figcaption .code{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--ink);color:var(--bg);padding:2px 7px;border-radius:5px}
+.mock figcaption h4{font-size:17px}
+.mock figcaption p{flex-basis:100%;margin:0;color:var(--muted);font-size:14.5px}
+.scroll{overflow-x:auto;padding-bottom:6px}
+.frame{width:1000px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13px;line-height:1.45;box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(20,30,60,.35)}
+.frame.sm{width:820px}
+.bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--sunk);border-bottom:1px solid var(--line)}
+.bar i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+.bar .url{margin-left:12px;flex:1;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.app{display:grid;grid-template-columns:190px 1fr;min-height:470px}
+.side{background:var(--sunk);border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:2px}
+.side .logo{font-family:var(--f-display);font-weight:700;font-size:15px;padding:2px 8px 12px}
+.side .logo span{color:var(--accent)}
+.side .role{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 8px 8px}
+.side a{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;border-radius:7px;color:var(--ink);text-decoration:none}
+.side a.on{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.side a b{font-size:10px;background:var(--bad);color:#fff;border-radius:9px;padding:0 6px}
+.side .me{margin-top:auto;display:flex;gap:8px;align-items:center;padding:8px;border-top:1px solid var(--line)}
+.av{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:var(--f-display);font-weight:600;font-size:11px;display:grid;place-items:center;flex:none}
+.mn{padding:18px 22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top h5{font-family:var(--f-display);font-size:19px;font-weight:600;margin:0}
+.crumbs{font-size:11.5px;color:var(--muted)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sp{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:7px;padding:6px 12px;font:inherit;font-weight:700;white-space:nowrap}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--accent)}
+.btn.danger{color:var(--bad)}
+.btn.lg{padding:12px 22px;font-size:16px;border-radius:12px}
+.in{border:1px solid var(--line);background:var(--paper);border-radius:7px;padding:6px 10px;color:var(--muted);min-width:0}
+.in.full{display:block;width:100%}
+.in.area{min-height:64px}
+.lbl{font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:4px;display:block}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fgrid.two{grid-template-columns:1fr 1fr}
+.box{border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:var(--paper)}
+.box.sunk{background:var(--sunk)}
+.box h6{font-family:var(--f-display);font-size:13px;font-weight:600;margin:0 0 8px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+.kpi .v{font-family:var(--f-display);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi .k{font-size:11.5px;color:var(--muted)}
+table.ui{width:100%;border-collapse:collapse}
+table.ui th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);font-weight:700}
+table.ui td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.p-new{background:var(--accent-soft);color:var(--accent)}
+.p-done{background:var(--warn-soft);color:var(--warn)}
+.p-corr{background:var(--sunk);color:var(--ink);border:1px solid var(--line)}
+.p-ok{background:var(--ok-soft);color:var(--ok)}
+.p-bad{background:var(--bad-soft);color:var(--bad)}
+.p-mute{background:var(--sunk);color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:20px;padding:2px 10px;font-size:12px;background:var(--paper)}
+.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line)}
+.tabs span{padding:7px 12px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs span.on{color:var(--accent);border-color:var(--accent);font-weight:700}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.split.r{grid-template-columns:1.6fr 1fr}
+.split.l{grid-template-columns:1fr 1.6fr}
+.ph{background:repeating-linear-gradient(45deg,var(--sunk),var(--sunk) 8px,var(--paper) 8px,var(--paper) 16px);border:1px dashed var(--line);border-radius:9px;display:grid;place-items:center;color:var(--muted);font-size:12px;text-align:center;padding:10px}
+.bar-h{height:8px;border-radius:5px;background:var(--sunk);overflow:hidden}
+.bar-h i{display:block;height:100%;background:var(--accent);border-radius:5px}
+.bar-h.ok i{background:var(--ok)}
+.check{display:inline-block;width:14px;height:14px;border:1.5px solid var(--muted);border-radius:3px;vertical-align:-2px}
+.check.on{background:var(--accent);border-color:var(--accent)}
+.radio{display:inline-block;width:14px;height:14px;border:1.5px solid var(--muted);border-radius:50%;vertical-align:-2px}
+.radio.on{border:4px solid var(--accent)}
+.tog{display:inline-block;width:30px;height:17px;border-radius:9px;background:var(--line);position:relative;vertical-align:-4px}
+.tog::after{content:"";position:absolute;width:13px;height:13px;border-radius:50%;background:var(--paper);top:2px;left:2px}
+.tog.on{background:var(--accent)}.tog.on::after{left:15px}
+.banner{background:var(--sun-soft);border:1px solid var(--sun);border-radius:8px;padding:8px 12px;font-weight:700;display:flex;gap:10px;align-items:center}
+.conf{font-family:var(--f-mono);font-size:10.5px;padding:1px 6px;border-radius:4px}
+.dropz{border:2px dashed var(--accent);border-radius:12px;background:var(--accent-soft);padding:26px;text-align:center;color:var(--accent)}
+.methods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.method{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.method.on{border:2px solid var(--accent);background:var(--accent-soft)}
+.method .ic{width:36px;height:36px;border-radius:9px;background:var(--paper);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+.method h6{font-family:var(--f-display);font-size:15px;margin:0}
+.opt{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:6px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.drag{color:var(--muted);font-family:var(--f-mono);letter-spacing:-2px}
+.blank{display:inline-block;min-width:90px;border-bottom:2px solid var(--accent);color:var(--accent);font-weight:700;text-align:center;padding:0 6px}
+.mark-ok{color:var(--ok);font-weight:700}.mark-bad{color:var(--bad);font-weight:700}
+
+/* Alumno: interfaz con más aire, tipografía grande, una cosa por vez */
+.stu{background:var(--bg);min-height:520px;display:flex;flex-direction:column;font-size:16px}
+.stu-top{display:flex;align-items:center;gap:14px;padding:12px 22px;background:var(--paper);border-bottom:1px solid var(--line)}
+.stu-top .logo{font-family:var(--f-display);font-weight:700;font-size:17px}
+.stu-top .logo span{color:var(--accent)}
+.stu-top nav{display:flex;gap:6px;margin-left:16px}
+.stu-top nav span{padding:7px 14px;border-radius:20px;font-weight:700;color:var(--muted)}
+.stu-top nav span.on{background:var(--accent-soft);color:var(--accent)}
+.stu-body{padding:24px 40px;display:flex;flex-direction:column;gap:18px;flex:1}
+.focus{max-width:640px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:18px;flex:1}
+.focus-head{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)}
+.dots{display:flex;gap:6px}
+.dots i{width:28px;height:7px;border-radius:4px;background:var(--line);display:block}
+.dots i.d{background:var(--ok)}.dots i.c{background:var(--accent)}
+.q{font-family:var(--f-display);font-size:24px;font-weight:500;line-height:1.35}
+.hint{font-size:14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.listen{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);border-radius:20px;padding:5px 12px;font-weight:700;font-size:13px;color:var(--accent)}
+.listen::before{content:"";border-left:8px solid var(--accent);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.bigopt{display:flex;align-items:center;gap:14px;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:14px 18px;font-size:18px}
+.bigopt .k{width:32px;height:32px;border-radius:9px;background:var(--sunk);display:grid;place-items:center;font-family:var(--f-display);font-weight:600;font-size:15px;flex:none}
+.bigopt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.bigopt.sel .k{background:var(--accent);color:var(--accent-ink)}
+.focus-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:8px}
+.tf{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tf div{border:2px solid var(--line);border-radius:16px;padding:20px;text-align:center;font-family:var(--f-display);font-size:22px;font-weight:600;background:var(--paper)}
+.tf div.sel{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.timer{font-family:var(--f-mono);font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+.taskcard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:8px 1fr auto;gap:14px;align-items:center}
+.taskcard .stripe{align-self:stretch;border-radius:4px;background:var(--accent)}
+.taskcard.done .stripe{background:var(--warn)}
+.taskcard.corr .stripe{background:var(--ok)}
+.taskcard.bad .stripe{background:var(--bad)}
+.taskcard h6{font-family:var(--f-display);font-size:16px;font-weight:600;margin:0 0 2px}
+.taskcard .meta{font-size:13px;color:var(--muted)}
+.strike{display:flex;align-items:center;gap:12px;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:11px 16px;font-size:17px}
+.strike.x{border-color:var(--bad);background:var(--bad-soft)}
+.strike.x span{text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:var(--bad);color:var(--muted)}
+.strike .xbox{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-weight:700;color:var(--bad)}
+.strike.x .xbox{border-color:var(--bad)}
+.paper{width:794px;margin:0 auto;background:#fff;color:#1b1b1b;padding:44px 52px;font-family:var(--f-body);font-size:14px;box-shadow:0 2px 14px rgba(0,0,0,.18)}
+.paper .ln{border-bottom:1px solid #999;height:24px}
+.paper h6{font-family:var(--f-display);font-size:15px;margin:18px 0 8px}
+svg.match text{font-family:var(--f-body);font-size:16px;fill:var(--ink)}
+svg.match .node{fill:var(--paper);stroke:var(--line);stroke-width:2}
+svg.match .node.sel{stroke:var(--accent);fill:var(--accent-soft)}
+svg.match .ln{stroke:var(--accent);stroke-width:3;fill:none}
+svg.match .ln2{stroke:var(--muted);stroke-width:2;stroke-dasharray:5 5;fill:none}
+svg.match .dot{fill:var(--accent)}
+svg.match .dot0{fill:var(--line)}
+/* Marcos de celular: el alumno usa principalmente celular o tablet */
+.phones{display:flex;gap:24px;align-items:flex-start;width:max-content}
+.frame.phone{width:360px;border:9px solid var(--bezel);border-radius:34px;font-size:14px}
+.frame.phone .stu{min-height:700px;font-size:15px}
+.status{display:flex;justify-content:space-between;padding:6px 20px 3px;font-family:var(--f-mono);font-size:11px;color:var(--muted);background:var(--paper)}
+.phone .stu-top{padding:10px 16px;gap:10px}
+.phone .stu-body{padding:16px;gap:12px}
+.phone .focus{gap:14px}
+.phone .q{font-size:20px}
+.phone .bigopt{font-size:16px;padding:12px 14px;border-radius:12px}
+.phone .tf div{font-size:18px;padding:16px}
+.phone .btn.lg{padding:11px 16px;font-size:15px}
+.phone .taskcard{grid-template-columns:6px 1fr;gap:10px;padding:12px}
+.phone .taskcard > :last-child:not(div:nth-child(2)){grid-column:2}
+.phone .dots i{width:20px}
+.btn.block{display:flex;justify-content:center;width:100%}
+.tabbar{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);background:var(--paper);margin-top:auto}
+.tabbar span{text-align:center;padding:9px 0 12px;font-size:12px;font-weight:700;color:var(--muted)}
+.tabbar span::before{content:"";display:block;width:22px;height:4px;border-radius:2px;margin:0 auto 5px;background:currentColor;opacity:.45}
+.tabbar span.on{color:var(--accent)}.tabbar span.on::before{opacity:1}
+.nowrap{flex-wrap:nowrap;overflow:hidden}
+.cam{background:#14161c;color:#dfe3ee;border-radius:14px;height:380px;position:relative;display:grid;place-items:center;text-align:center;font-size:13px}
+.cam::before{content:"";position:absolute;inset:34px 26px;border:2px dashed rgba(255,255,255,.55);border-radius:10px}
+.shutter{width:64px;height:64px;border-radius:50%;border:5px solid var(--line);background:var(--paper);margin:0 auto}
+.late{background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Índice">
+  <div class="brand">Fert<span>elligence</span></div>
+  <p>Alcance funcional y mockups · v0.7 · 20 oct 2026</p>
+  <ol>
+    <li><a href="#resumen">Resumen</a></li>
+    <li><a href="#decisiones">Decisiones confirmadas</a></li>
+    <li><a href="#roles">Roles y permisos</a></li>
+    <li><a href="#modelo">Modelo de datos</a></li>
+    <li><a href="#ciclo">Ciclo de vida de una tarea</a></li>
+    <li><a href="#tipos">Tipos de tarea</a></li>
+    <li><a href="#creacion">Creación de tareas</a></li>
+    <li><a href="#correccion">Corrección y aprobación</a></li>
+    <li><a href="#alumno">Experiencia adaptada</a></li>
+    <li><a href="#extras">Funcionalidades propuestas</a></li>
+    <li><a href="#nofunc">Requisitos no funcionales</a></li>
+    <li><a href="#mapa">Mapa de pantallas</a></li>
+    <li><a href="#mockups">Mockups</a></li>
+    <li class="sub"><a href="#m-comun">Comunes</a></li>
+    <li class="sub"><a href="#m-admin">Administrador</a></li>
+    <li class="sub"><a href="#m-doc">Docente</a></li>
+    <li class="sub"><a href="#m-alu">Alumno</a></li>
+    <li><a href="#fases">Fases sugeridas</a></li>
+    <li><a href="#preguntas">Preguntas abiertas</a></li>
+  </ol>
+</nav>
+
+<main>
+<!-- ================= RESUMEN ================= -->
+<section id="resumen">
+  <div class="eyebrow">Documento de alcance</div>
+  <h1>Fertelligence</h1>
+  <p class="lead">Una plataforma donde los docentes crean tareas cortas y estructuradas para alumnos con dificultades de atención, el alumno las resuelve en una interfaz pensada para reducir distracciones, y el docente corrige y devuelve una explicación clara. La IA ayuda a cargar y generar tareas, pero el docente siempre revisa antes de publicar.</p>
+  <div class="grid3" style="margin-top:20px">
+    <div class="card"><h3>Para el alumno</h3><p class="muted" style="margin:0">Una tarea por vez, una consigna por pantalla, lectura en voz alta, progreso visible y guardado automático. Sabe siempre qué tiene que hacer hoy.</p></div>
+    <div class="card"><h3>Para el docente</h3><p class="muted" style="margin:0">Crear una tarea en minutos, por formulario, desde una foto o desde un texto. Corrección automática de lo objetivo y bandeja para revisar lo abierto.</p></div>
+    <div class="card"><h3>Para la institución</h3><p class="muted" style="margin:0">Gestión de materias, docentes, alumnos y asignaciones; reportes de seguimiento y trazabilidad de quién hizo qué.</p></div>
+  </div>
+  <div class="note"><b>Cómo leer este documento.</b> Las etiquetas indican el origen de cada funcionalidad: <span class="tag t-req">REQ</span> pedida en el requerimiento original, <span class="tag t-mvp">MVP</span> propuesta y recomendada para la primera versión, <span class="tag t-f2">FASE 2</span> y <span class="tag t-f3">FASE 3</span> propuestas para más adelante. Las suposiciones que tomé están marcadas y se resuelven con las <a href="#preguntas">preguntas abiertas</a>.</div>
+</section>
+
+<!-- ================= DECISIONES ================= -->
+<section id="decisiones">
+  <div class="eyebrow">Respuestas del 19 oct 2026</div>
+  <h2>Decisiones confirmadas</h2>
+  <p>Estas respuestas reemplazan las suposiciones de la versión anterior y ya están aplicadas en todo el documento y en los mockups.</p>
+  <div class="tablewrap"><table class="doc">
+    <thead><tr><th>Tema</th><th>Decisión</th><th>Qué cambia en el sistema</th></tr></thead>
+    <tbody>
+      <tr><td>Alumnos</td><td>Entre 10 y 18 años</td><td>Tono respetuoso, sin infantilizar. Ingreso con usuario y contraseña (se descarta la contraseña con imágenes). Insignias y rachas, opcionales.</td></tr>
+      <tr><td>Dispositivos</td><td>Cualquiera, principalmente tablet y celular</td><td>Diseño <em>mobile-first</em>. Los mockups del alumno ahora son de celular. El docente también puede crear desde la cámara y corregir desde el celular (D15).</td></tr>
+      <tr><td>Instalación</td><td>Una escuela por instalación</td><td>Cada instalación tiene su base de datos y su configuración.</td></tr>
+      <tr><td>Psicopedagogos y docentes particulares</td><td>Entran como docentes de la escuela</td><td>No hay un modo independiente. El administrador los da de alta como docentes y les asigna alumnos y materias (por ejemplo, una materia "Apoyo psicopedagógico").</td></tr>
+      <tr><td>Familias</td><td>No tienen acceso</td><td>Se descarta el rol familia. La ficha del alumno puede guardar un contacto de la familia, solo como dato.</td></tr>
+      <tr><td>Tipo de tarea</td><td>Siempre de un solo tipo</td><td>Sin cambios: el tipo se elige una vez y aplica a todos los ítems.</td></tr>
+      <tr><td>Asignación</td><td>Una tarea se puede asignar a varios alumnos</td><td>Se crea una tarea por alumno a partir de una plantilla común, así cada uno tiene su entrega, su nota y sus fechas.</td></tr>
+      <tr><td>Corrección</td><td>Por ítem. Nota de 0 a 10. Se aprueba con 70 %</td><td>Cada ítem tiene peso, respuesta correcta y explicación. Nota = puntos obtenidos ÷ puntos posibles × 10. Aprueba con 7 o más.</td></tr>
+      <tr><td>Múltiple choice con varias respuestas</td><td>Hay puntaje parcial</td><td>Cada opción correcta marcada suma una parte, cada incorrecta marcada resta una parte, y el ítem nunca baja de 0 (ver <a href="#correccion">Corrección</a>).</td></tr>
+      <tr><td>Publicación</td><td>Siempre con aprobación del docente</td><td>La precorrección automática es solo una sugerencia. Aprobar la corrección es el único evento que pasa la tarea de Completada a Corregida.</td></tr>
+      <tr><td>Nota sugerida</td><td>En todos los tipos de tarea la nota es sugerida y el docente puede cambiarla</td><td>El docente puede ajustar el puntaje de cada ítem y también reemplazar la nota final. Queda registrado si la nota fue cambiada.</td></tr>
+      <tr><td>Rehacer</td><td>Lo decide el docente cada vez que corrige una tarea desaprobada</td><td>En cada corrección desaprobada, el docente elige "Queda desaprobada" o "Debe rehacerla" (con nueva fecha). No hay límite de intentos: se repite mientras el docente lo pida. Se conservan todos los intentos. <strong>Vale la nota del último intento.</strong></td></tr>
+      <tr><td>Qué se rehace</td><td>Se configura al crear la tarea</td><td>Opción en la tarea: "rehacer toda la tarea" o "rehacer solo los ítems incorrectos".</td></tr>
+      <tr><td>Imágenes</td><td>Preguntas y opciones pueden llevar imágenes</td><td>El editor permite adjuntar una imagen a la consigna, a cada ítem y a cada opción. Se ven en el celular y en la versión impresa.</td></tr>
+      <tr><td>Notas enteras</td><td>La nota de cada tarea es un número entero</td><td>La nota calculada se redondea al entero más cercano (7,5 pasa a 8, 6,4 pasa a 6; un 6,5 se redondea a 7 y aprueba). Los promedios de seguimiento pueden mostrar un decimal.</td></tr>
+      <tr><td>Rehacer solo incorrectos</td><td>La nota suma lo que ya estaba bien y lo rehecho</td><td>El nuevo intento conserva los ítems correctos del intento anterior y solo pide los incorrectos.</td></tr>
+      <tr><td>Ingreso</td><td>Los alumnos tienen email propio, en general de Gmail</td><td>Ingreso con Google para todos los roles desde el MVP; también email y contraseña con recuperación por email. Solo entran cuentas que el administrador dio de alta.</td></tr>
+      <tr><td>Google Classroom</td><td>Importar contenido de Classroom al crear tareas</td><td>Cuarto método de creación: el docente elige un curso y un material o cuestionario de Classroom, y el sistema lo convierte en una tarea para revisar. Solo lectura: no publica nada en Classroom.</td></tr>
+      <tr><td>Classroom: cursos y alumnos</td><td>El administrador puede importarlos</td><td>Importación desde Classroom (A11): crea cursos, alumnos y docentes, y propone las asignaciones. Los que ya existen se reconocen por email y no se duplican.</td></tr>
+      <tr><td>Plazo y presupuesto</td><td>Sin definir por ahora</td><td>Las fases sugeridas sirven de base para estimar cuando se definan.</td></tr>
+      <tr><td>Admin aprueba en nombre</td><td>El administrador puede aprobar correcciones en nombre de un docente</td><td>Mismo aviso "actuando en nombre de" que al cargar tareas, y queda registrado.</td></tr>
+      <tr><td>Costo de IA</td><td>Hasta USD 50 por mes</td><td>Tope mensual por instalación con aviso al 80 %. Al llegar al tope se pausan los métodos con IA hasta el mes siguiente; el formulario sigue funcionando.</td></tr>
+      <tr><td>Logros y rachas</td><td>Opcionales</td><td>El alumno puede ocultarlos desde sus preferencias, y el administrador desactivarlos para toda la escuela.</td></tr>
+      <tr><td>Fuera de término</td><td>Se puede entregar tarde, sin límite de tiempo</td><td>La entrega queda marcada "Fuera de término" para el docente, que puede desaprobarla aunque el puntaje alcance el 70 %, indicando el motivo.</td></tr>
+      <tr><td>Adaptaciones y diagnóstico</td><td>No se usan</td><td>No hay perfil por alumno ni datos de salud. Las ayudas de la interfaz (modo foco, lectura en voz alta, pausas) son iguales para todos los alumnos, y cada uno ajusta sus propias preferencias.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= ROLES ================= -->
+<section id="roles">
+  <div class="eyebrow">Quién hace qué</div>
+  <h2>Roles y permisos</h2>
+  <p>Tres roles. Psicopedagogos y docentes particulares usan el rol docente. El administrador puede <em>actuar en nombre de</em> un docente, y esa acción queda registrada con ambos nombres.</p>
+  <div class="tablewrap"><table class="doc">
+    <thead><tr><th>Acción</th><th>Administrador</th><th>Docente</th><th>Alumno</th></tr></thead>
+    <tbody>
+      <tr><td>ABM de materias</td><td class="yes">Sí</td><td class="no">No</td><td class="no">No</td></tr>
+      <tr><td>ABM de docentes y alumnos</td><td class="yes">Sí</td><td class="no">No</td><td class="no">No</td></tr>
+      <tr><td>Asignar docentes a alumnos por materia</td><td class="yes">Sí</td><td class="no">No</td><td class="no">No</td></tr>
+      <tr><td>Crear, editar y publicar tareas</td><td class="yes">En nombre de un docente</td><td class="yes">Sí, para sus alumnos y materias</td><td class="no">No</td></tr>
+      <tr><td>Aprobar correcciones</td><td class="yes">En nombre de un docente</td><td class="yes">Sí</td><td class="no">No</td></tr>
+      <tr><td>Resolver tareas</td><td class="no">No</td><td>Vista previa</td><td class="yes">Sí</td></tr>
+      <tr><td>Imprimir tarea</td><td class="yes">Sí</td><td class="yes">Sí</td><td class="yes">Sí</td></tr>
+      <tr><td>Ver resultados y progreso</td><td>Toda la escuela</td><td>Sus alumnos</td><td>Propios</td></tr>
+      <tr><td>Ajustar preferencias de visualización</td><td class="no">No</td><td class="no">No</td><td class="yes">Las propias</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= MODELO ================= -->
+<section id="modelo">
+  <div class="eyebrow">Entidades</div>
+  <h2>Modelo de datos</h2>
+  <p>La relación central es la <strong>asignación</strong>: un alumno, una materia y el docente que la dicta para ese alumno. Toda tarea cuelga de una asignación, así se garantiza que un docente solo cargue tareas para alumnos y materias que le corresponden.</p>
+  <p>La <strong>corrección</strong> del requerimiento tiene dos partes que conviene separar: la <em>clave de corrección</em> (respuesta correcta, puntaje máximo y texto explicativo, por ítem) que se define al crear la tarea, y el <em>resultado</em> (puntaje obtenido, comentario del docente, aprobada o no) que se genera al corregir la entrega.</p>
+<pre class="mermaid">
+erDiagram
+  USUARIO ||--o| DOCENTE : es
+  USUARIO ||--o| ALUMNO : es
+  USUARIO ||--o| ADMINISTRADOR : es
+  DOCENTE }o--o{ MATERIA : dicta
+  ALUMNO ||--o{ ASIGNACION : tiene
+  DOCENTE ||--o{ ASIGNACION : atiende
+  MATERIA ||--o{ ASIGNACION : en
+  ASIGNACION ||--o{ TAREA : recibe
+  TAREA ||--|{ ITEM : contiene
+  ITEM ||--|| CLAVE_CORRECCION : define
+  TAREA ||--o{ ENTREGA : intentos
+  ENTREGA ||--|{ RESPUESTA : incluye
+  ENTREGA ||--o| RESULTADO : corregida_en
+  TAREA }o--o| PLANTILLA : basada_en
+  TAREA ||--o{ ADJUNTO_ORIGEN : creada_desde
+  TAREA {
+    uuid id
+    enum tipo
+    string titulo
+    text consigna
+    datetime fecha_creacion
+    datetime fecha_inicio
+    datetime fecha_entrega
+    enum estado
+    enum origen "formulario|foto|texto"
+    uuid creada_por
+    uuid en_nombre_de
+    decimal nota_aprobacion "por defecto 7"
+  }
+  ENTREGA {
+    int intento
+    datetime fecha_entrega
+    bool fuera_de_termino
+  }
+  ITEM {
+    uuid id
+    int orden
+    json contenido
+  }
+  CLAVE_CORRECCION {
+    json respuesta_correcta
+    decimal puntaje_max
+    text explicacion
+  }
+  RESULTADO {
+    int nota "0 a 10"
+    text comentario
+    bool aprobada
+    bool desaprobada_por_docente
+    text motivo
+    bool pedir_rehacer
+    uuid aprobada_por
+    datetime fecha
+  }
+</pre>
+  <h3 style="margin-top:20px">Reglas de negocio</h3>
+  <ul>
+    <li>Un docente dicta una o más materias; un alumno tiene uno o más docentes asignados; un docente trabaja con varios alumnos. <span class="tag t-req">REQ</span></li>
+    <li>Cada tarea pertenece a un alumno en una materia. Para no cargar lo mismo diez veces, el docente puede <strong>asignar la misma tarea a varios alumnos</strong>: el sistema crea una tarea por alumno a partir de una plantilla común. <span class="tag t-req">REQ</span></li>
+    <li>La tarea no es visible para el alumno antes de la <em>fecha de inicio</em>. <span class="tag t-mvp">MVP</span></li>
+    <li>Después de la <em>fecha de entrega</em> el alumno todavía puede entregar; la entrega queda marcada <strong>fuera de término</strong> y el docente lo ve con un indicador. No hay límite de tiempo para entregar tarde. El docente también puede extender el plazo. <span class="tag t-req">REQ</span></li>
+    <li>Una tarea publicada con entregas no se edita: se duplica. Así no cambia la clave de corrección después de que el alumno respondió. <span class="tag t-mvp">MVP</span></li>
+    <li>La corrección es por ítem. La nota de la tarea va de 0 a 10: puntos obtenidos ÷ puntos posibles × 10, redondeada al entero más cercano. Se aprueba con 7 (70 %). <span class="tag t-req">REQ</span></li>
+    <li>Si se rehacen solo los ítems incorrectos, la nota sugerida del nuevo intento suma los ítems que ya estaban bien y los rehechos. <span class="tag t-req">REQ</span></li>
+    <li>El administrador puede cargar tareas y aprobar correcciones en nombre de un docente; ambas acciones quedan registradas. <span class="tag t-req">REQ</span></li>
+    <li>Si la entrega fue fuera de término, el docente puede desaprobar aunque la nota sea 7 o más, y debe indicar el motivo. <span class="tag t-req">REQ</span></li>
+    <li>Solo el docente pasa una tarea de Completada a Corregida, al aprobar la corrección. <span class="tag t-req">REQ</span></li>
+    <li>Cada vez que el docente corrige y la tarea queda desaprobada, decide si queda desaprobada o si el alumno debe rehacerla. Si la rehace, se abre un nuevo intento con nueva fecha, sin límite de intentos; se conservan los anteriores y vale la nota del último. <span class="tag t-req">REQ</span></li>
+    <li>Al crear la tarea se configura qué se rehace: toda la tarea o solo los ítems incorrectos. <span class="tag t-req">REQ</span></li>
+    <li>La nota calculada es siempre una sugerencia: el docente puede cambiar el puntaje de cada ítem y la nota final. <span class="tag t-req">REQ</span></li>
+    <li>Consignas, ítems y opciones pueden llevar imágenes. <span class="tag t-req">REQ</span></li>
+    <li>En múltiple choice con varias respuestas correctas hay puntaje parcial. <span class="tag t-req">REQ</span></li>
+    <li>Las bajas son lógicas: un alumno o docente dado de baja conserva su historial.</li>
+  </ul>
+</section>
+
+<!-- ================= CICLO ================= -->
+<section id="ciclo">
+  <div class="eyebrow">Estados</div>
+  <h2>Ciclo de vida de una tarea</h2>
+  <p>El alumno ve los tres estados pedidos (<span class="pill p-new">Nueva</span> <span class="pill p-done">Completada</span> <span class="pill p-corr">Corregida</span>) más el resultado (<span class="pill p-ok">Aprobada</span> <span class="pill p-bad">Desaprobada</span>). Internamente propongo estados adicionales para el docente y para no perder trabajo a medio hacer.</p>
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> Borrador : docente crea
+  Borrador --> Programada : publica con fecha de inicio futura
+  Borrador --> Nueva : publica (inicio hoy)
+  Programada --> Nueva : llega fecha de inicio
+  Nueva --> EnProgreso : alumno abre y responde algo
+  EnProgreso --> Completada : entrega a tiempo
+  Nueva --> Vencida : pasa fecha de entrega
+  EnProgreso --> Vencida : pasa fecha de entrega
+  Vencida --> Nueva : docente extiende plazo
+  Vencida --> Completada : entrega fuera de término
+  Completada --> Corregida : docente aprueba la corrección
+  Corregida --> ParaRehacer : desaprobada y el docente pide rehacer
+  ParaRehacer --> EnProgreso : alumno empieza nuevo intento
+  Corregida --> [*]
+</pre>
+  <div class="tablewrap" style="margin-top:12px"><table class="doc">
+    <thead><tr><th>Estado interno</th><th>Lo ve el alumno como</th><th>Origen</th></tr></thead>
+    <tbody>
+      <tr><td>Borrador, Programada</td><td>No la ve</td><td><span class="tag t-mvp">MVP</span></td></tr>
+      <tr><td>Nueva</td><td>Nueva</td><td><span class="tag t-req">REQ</span></td></tr>
+      <tr><td>En progreso</td><td>Nueva, con barra "3 de 5 respondidas"</td><td><span class="tag t-mvp">MVP</span></td></tr>
+      <tr><td>Completada</td><td>Completada · esperando corrección (el docente ve "Fuera de término" si corresponde)</td><td><span class="tag t-req">REQ</span></td></tr>
+      <tr><td>Corregida</td><td>Corregida + Aprobada / Desaprobada</td><td><span class="tag t-req">REQ</span></td></tr>
+      <tr><td>Vencida</td><td>Vencida · todavía podés entregarla</td><td><span class="tag t-req">REQ</span></td></tr>
+      <tr><td>Para rehacer</td><td>Nueva · Para rehacer, con el comentario del docente</td><td><span class="tag t-req">REQ</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= TIPOS ================= -->
+<section id="tipos">
+  <div class="eyebrow">Ejercicios</div>
+  <h2>Tipos de tarea</h2>
+  <p>Una tarea es siempre de un solo tipo y contiene uno o más ítems de ese tipo. Cada ítem tiene su propia clave de corrección y su peso. La precorrección automática es una sugerencia para el docente: nunca se publica sola. En todos los tipos, la consigna, los ítems y las opciones pueden llevar imágenes.</p>
+  <div class="tablewrap"><table class="doc">
+    <thead><tr><th>Tipo</th><th>Qué carga el docente</th><th>Qué hace el alumno</th><th>Precorrección automática</th><th>Qué genera la IA</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Múltiple choice</strong><br><span class="muted">única o varias respuestas</span></td><td>Pregunta, opciones, cuáles son correctas, modo única/múltiple</td><td>Elige una o varias opciones</td><td class="yes">Total. Con varias respuestas, puntaje parcial</td><td>Opciones correctas y distractores plausibles a partir del texto</td></tr>
+      <tr><td><strong>Verdadero o falso</strong></td><td>Afirmación, valor correcto, si exige justificación</td><td>Marca V o F; escribe o dicta la justificación si se pide</td><td>El V/F sí; la justificación la revisa el docente (la IA puede sugerir puntaje)</td><td>Afirmaciones verdaderas y falsas derivadas del texto</td></tr>
+      <tr><td><strong>Unir con flechas</strong></td><td>Dos columnas y los pares correctos (admite distractores sin pareja)</td><td>Toca un ítem de cada columna para unirlos</td><td class="yes">Total, por par</td><td>Pares concepto–definición, causa–efecto, etc.</td></tr>
+      <tr><td><strong>Completar</strong></td><td>Texto con huecos marcados y respuestas aceptadas (sinónimos)</td><td>Escribe en cada hueco o elige de un banco de palabras</td><td class="yes">Sí, tolerando mayúsculas, tildes y sinónimos cargados</td><td>Elige las palabras clave a quitar del texto</td></tr>
+      <tr><td><strong>Tachar lo que no corresponde</strong></td><td>Texto del tema y lista de frases, marcando cuáles no corresponden</td><td>Lee el texto y tacha frases</td><td class="yes">Total, por frase</td><td>Frases correctas y frases intrusas del mismo tema</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= CREACIÓN ================= -->
+<section id="creacion">
+  <div class="eyebrow">Cuatro caminos, un mismo editor</div>
+  <h2>Creación de tareas</h2>
+  <p>Los cuatro métodos terminan en el mismo editor de tarea, donde el docente revisa, corrige lo que haga falta, define fechas y alumnos, y publica. Nada generado por IA se publica sin esa revisión.</p>
+  <div class="grid3">
+    <div class="card"><h3>1 · Formulario <span class="tag t-req">REQ</span></h3><ul><li>Elegir alumno(s), materia y tipo.</li><li>Cargar ítems con editor específico por tipo.</li><li>Definir clave, puntaje y explicación por ítem.</li><li>Fechas de inicio y entrega (aprueba con 7, ajustable por tarea).</li><li>Vista previa como alumno.</li></ul></div>
+    <div class="card"><h3>2 · Desde una foto <span class="tag t-req">REQ</span></h3><ul><li>Subir foto o PDF del ejercicio (o sacarla con el celular).</li><li>OCR extrae el texto (incluye manuscrito legible).</li><li>Un modelo de lenguaje clasifica el tipo y estructura los ítems.</li><li>Se muestra la imagen al lado del resultado, con nivel de confianza por campo.</li><li>Si no detecta la respuesta correcta, la pide.</li></ul></div>
+    <div class="card"><h3>3 · Desde un texto <span class="tag t-req">REQ</span></h3><ul><li>Texto fuente escrito, dictado (voz a texto) o por foto (OCR).</li><li>El docente elige tipo y cantidad de ítems.</li><li>La IA genera la tarea completa con clave y explicaciones.</li><li>Puede regenerar un ítem puntual, ajustar dificultad o pedir lenguaje más simple.</li></ul></div>
+    <div class="card"><h3>4 · Desde Google Classroom <span class="tag t-req">REQ</span></h3><ul><li>El docente conecta su cuenta de Google (solo lectura).</li><li>Elige un curso y un material: cuestionario de Google Forms, documento, PDF o imagen.</li><li>Un cuestionario se importa directo: las preguntas de opción múltiple y casilleros pasan a múltiple choice con su clave.</li><li>Documentos, PDF e imágenes pasan por el camino 2 (foto) o el 3 (texto).</li><li>No publica nada en Classroom.</li></ul></div>
+  </div>
+  <h3 style="margin-top:24px">Qué significa "cantidad de ítems" en cada tipo</h3>
+  <p class="muted">Propuesta: se piden dos números, la cantidad de preguntas y la cantidad de elementos por pregunta, porque el requerimiento los mezcla.</p>
+  <div class="tablewrap"><table class="doc">
+    <thead><tr><th>Tipo</th><th>Cantidad de preguntas</th><th>Elementos por pregunta</th></tr></thead>
+    <tbody>
+      <tr><td>Múltiple choice</td><td>Cuántas preguntas</td><td>Cuántas opciones (p. ej. 4) y cuántas correctas</td></tr>
+      <tr><td>Verdadero o falso</td><td>Cuántas afirmaciones</td><td>No aplica; se elige si llevan justificación</td></tr>
+      <tr><td>Unir con flechas</td><td>Cuántos ejercicios de unir</td><td>Cuántos pares (y distractores extra)</td></tr>
+      <tr><td>Completar</td><td>Cuántos párrafos</td><td>Cuántos huecos por párrafo; banco de palabras sí/no</td></tr>
+      <tr><td>Tachar</td><td>Cuántos textos</td><td>Cuántas frases y cuántas no corresponden</td></tr>
+    </tbody>
+  </table></div>
+  <h3 style="margin-top:24px">Flujo técnico de la creación asistida</h3>
+  <ol class="steps">
+    <li><strong>Captura.</strong> Imagen o audio se guardan como adjunto de origen de la tarea, para auditoría y para mostrarlos al lado del resultado.</li>
+    <li><strong>Extracción.</strong> OCR para imágenes, voz a texto para dictado. El texto extraído es editable antes de seguir.</li>
+    <li><strong>Estructuración.</strong> Un modelo de lenguaje devuelve JSON validado contra el esquema del tipo (si viene de foto, también clasifica el tipo).</li>
+    <li><strong>Revisión.</strong> El docente ve el resultado en el editor normal, con avisos donde la confianza es baja.</li>
+    <li><strong>Publicación.</strong> Igual que una tarea de formulario. Se registra el origen y el modelo usado.</li>
+  </ol>
+</section>
+
+<!-- ================= CORRECCIÓN ================= -->
+<section id="correccion">
+  <div class="eyebrow">Del resultado al aprendizaje</div>
+  <h2>Corrección y aprobación</h2>
+  <div class="grid2">
+    <div class="card"><h3>Precorrección automática <span class="tag t-mvp">MVP</span></h3><p class="muted" style="margin:0">Al entregar, el sistema precorrige todo lo objetivo (opciones, V/F, pares, huecos, tachados) y calcula una nota sugerida. La tarea queda <em>Completada</em> y entra en la bandeja del docente. El alumno no ve nada hasta que el docente aprueba.</p></div>
+    <div class="card"><h3>Aprobación del docente <span class="tag t-req">REQ</span></h3><p class="muted" style="margin:0">Revisa justificaciones y respuestas dudosas, ajusta el puntaje de cada ítem o directamente la nota final (la calculada es siempre una sugerencia), agrega un comentario y aprueba la corrección. Ese es el único evento que pasa la tarea a <em>Corregida</em>. Puede aprobar varias en lote, pero siempre es una acción suya.</p></div>
+    <div class="card"><h3>Nota y aprobación <span class="tag t-req">REQ</span></h3><p class="muted" style="margin:0">Nota de 0 a 10 = puntos obtenidos ÷ puntos posibles × 10. Aprueba con 7. La nota es un entero: se redondea al más cercano. Ejemplo: 4 ítems de 2,5 puntos con 3 correctos dan 7,5, que se redondea a 8 y aprueba.</p></div>
+    <div class="card"><h3>Puntaje parcial en múltiple choice <span class="tag t-req">REQ</span></h3><p class="muted" style="margin:0">Si un ítem vale 2 puntos y tiene 2 opciones correctas, cada correcta marcada suma 1 y cada incorrecta marcada resta 1, sin bajar de 0. Marcar 1 correcta da 1 punto; marcar las 2 correctas da 2; marcar 1 correcta y 1 incorrecta da 0. Así no conviene marcar todo.</p></div>
+    <div class="card"><h3>Fuera de término <span class="tag t-req">REQ</span></h3><p class="muted" style="margin:0">La entrega tardía muestra al docente un indicador con los días de atraso. Al corregir puede elegir "Desaprobar por entrega fuera de término" aunque la nota sea 7 o más; el motivo se le muestra al alumno.</p></div>
+    <div class="card"><h3>Rehacer <span class="tag t-req">REQ</span></h3><p class="muted" style="margin:0">Cada vez que una corrección queda desaprobada, el docente elige si queda así o si el alumno debe rehacerla, con nueva fecha. Qué se rehace (toda la tarea o solo los ítems incorrectos) se definió al crear la tarea. El alumno la ve como "Para rehacer". No hay límite de intentos; vale la nota del último y los anteriores quedan guardados para ver la evolución.</p></div>
+    <div class="card"><h3>Devolución al alumno <span class="tag t-req">REQ</span></h3><p class="muted" style="margin:0">El alumno ve cada ítem con su respuesta, la correcta y el texto explicativo. El resultado usa lenguaje directo y respetuoso ("8 de 10 · Aprobada").</p></div>
+  </div>
+</section>
+
+<!-- ================= ALUMNO ================= -->
+<section id="alumno">
+  <div class="eyebrow">Diseño para la atención</div>
+  <h2>Experiencia adaptada del alumno</h2>
+  <p>Esto es lo que diferencia al producto de un formulario cualquiera. Estas ayudas son iguales para todos los alumnos: no hay perfiles individuales ni datos de salud. Cada alumno puede ajustar sus propias preferencias (tamaño de letra, colores, lectura en voz alta, avisos de pausa). Como los alumnos tienen entre 10 y 18 años, el tono es directo y respetuoso, sin infantilizar, y todo está pensado primero para el celular.</p>
+  <div class="grid3">
+    <div class="card"><h3>Modo foco <span class="tag t-mvp">MVP</span></h3><ul><li>Una consigna por pantalla.</li><li>Sin menús ni notificaciones mientras resuelve.</li><li>Barra de progreso por segmentos.</li></ul></div>
+    <div class="card"><h3>Lectura y escritura <span class="tag t-mvp">MVP</span></h3><ul><li>Botón "Escuchar" en cada consigna y opción.</li><li>Dictado por voz para justificaciones.</li><li>Tipografía de alta legibilidad, tamaño ajustable.</li><li>Resaltado de palabras clave definido por el docente.</li></ul></div>
+    <div class="card"><h3>Ritmo <span class="tag t-mvp">MVP</span></h3><ul><li>Guardado automático en cada respuesta.</li><li>Pausas sugeridas cada N minutos (temporizador opcional y nunca punitivo).</li><li>Tiempo estimado antes de empezar.</li><li>Tareas cortas: aviso al docente si supera X ítems.</li></ul></div>
+    <div class="card"><h3>Orientación <span class="tag t-mvp">MVP</span></h3><ul><li>Pantalla "Hoy" con lo próximo a hacer, no una lista infinita.</li><li>Recordatorios de vencimiento.</li><li>Revisión antes de entregar que marca lo sin responder.</li></ul></div>
+    <div class="card"><h3>Motivación <span class="tag t-f2">FASE 2</span></h3><ul><li>Rachas e insignias por constancia, no por nota, desactivables por alumno.</li><li>Mensajes del docente.</li><li>Celebración breve al entregar.</li></ul></div>
+    <div class="card"><h3>Accesibilidad visual <span class="tag t-mvp">MVP</span></h3><ul><li>Alto contraste y modo oscuro.</li><li>Menos animaciones.</li><li>Interlineado y espaciado ampliados.</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= EXTRAS ================= -->
+<section id="extras">
+  <div class="eyebrow">Más allá del requerimiento</div>
+  <h2>Funcionalidades propuestas</h2>
+  <div class="grid2">
+    <div class="card"><h3>Gestión académica</h3><ul>
+      <li><span class="tag t-mvp">MVP</span> Ciclo lectivo y cursos/divisiones, para filtrar y archivar al cerrar el año.</li>
+      <li><span class="tag t-mvp">MVP</span> Importación masiva de alumnos y docentes por planilla (CSV/Excel).</li>
+      <li><span class="tag t-req">REQ</span> Importación de cursos, alumnos y docentes desde Google Classroom.</li>
+      <li><span class="tag t-mvp">MVP</span> Matriz de asignaciones alumno × materia → docente.</li>
+      <li><span class="tag t-req">REQ</span> Una instalación por escuela, con su propia base de datos y configuración.</li>
+    </ul></div>
+    <div class="card"><h3>Productividad docente</h3><ul>
+      <li><span class="tag t-mvp">MVP</span> Banco de tareas propio y plantillas reutilizables.</li>
+      <li><span class="tag t-req">REQ</span> Asignar una misma tarea a varios alumnos.</li>
+      <li><span class="tag t-mvp">MVP</span> Vista previa "como alumno".</li>
+      <li><span class="tag t-f2">FASE 2</span> Banco compartido entre docentes de la institución.</li>
+      <li><span class="tag t-f2">FASE 2</span> Ajustar la misma tarea a distinto nivel de dificultad por alumno.</li>
+    </ul></div>
+    <div class="card"><h3>Seguimiento</h3><ul>
+      <li><span class="tag t-mvp">MVP</span> Ficha del alumno: entregas a tiempo, promedio por materia, tipos de tarea donde más falla.</li>
+      <li><span class="tag t-mvp">MVP</span> Alertas: tareas vencidas, alumno sin actividad hace N días.</li>
+      <li><span class="tag t-f2">FASE 2</span> Reportes exportables para equipos de orientación y reuniones con familias.</li>
+      <li><span class="tag t-f3">FASE 3</span> Analítica de tiempo por ítem y patrones de abandono.</li>
+    </ul></div>
+    <div class="card"><h3>Comunicación</h3><ul>
+      <li><span class="tag t-mvp">MVP</span> Notificaciones en la app y por email (nueva tarea, corrección publicada, vencimiento).</li>
+      <li><span class="tag t-f2">FASE 2</span> Comentarios por ítem entre docente y alumno.</li>
+    </ul></div>
+    <div class="card"><h3>Impresión y papel</h3><ul>
+      <li><span class="tag t-req">REQ</span> Imprimir la tarea en formato carpeta (A4, encabezado con nombre, materia y fecha).</li>
+      <li><span class="tag t-mvp">MVP</span> Opción de imprimir la corrección con explicaciones.</li>
+      <li><span class="tag t-f2">FASE 2</span> Código QR en la hoja para abrir la versión digital.</li>
+      <li><span class="tag t-f3">FASE 3</span> Resolver en papel, sacar foto y que el sistema la corrija.</li>
+    </ul></div>
+    <div class="card"><h3>Plataforma</h3><ul>
+      <li><span class="tag t-req">REQ</span> Diseño mobile-first: todo se usa en celular y tablet, y también en computadora (PWA instalable).</li>
+      <li><span class="tag t-req">REQ</span> Ingreso con Google para todos los roles, y también con email y contraseña.</li>
+      <li><span class="tag t-req">REQ</span> Importar materiales y cuestionarios de Google Classroom al crear tareas.</li>
+      <li><span class="tag t-f3">FASE 3</span> Modo sin conexión para resolver y sincronizar después.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ================= NO FUNCIONALES ================= -->
+<section id="nofunc">
+  <div class="eyebrow">Calidad</div>
+  <h2>Requisitos no funcionales</h2>
+  <div class="tablewrap"><table class="doc">
+    <tbody>
+      <tr><th>Privacidad de menores</th><td>Se guardan solo los datos necesarios para usar el sistema (nombre, curso, usuario, contacto de la familia) y ningún dato de salud, según la Ley 25.326 de Protección de Datos Personales en Argentina o la que aplique. Consentimiento de la familia, cifrado en reposo, y a la IA solo se le envía el contenido del ejercicio, nunca datos del alumno.</td></tr>
+      <tr><th>Accesibilidad</th><td>WCAG 2.2 nivel AA como piso; navegación completa por teclado y lector de pantalla.</td></tr>
+      <tr><th>Tema claro y oscuro</th><td>Toda la interfaz, en todos los roles y dispositivos, se puede cambiar entre tema claro y oscuro. Por defecto sigue la configuración del dispositivo; el usuario puede fijar claro u oscuro desde su perfil y la elección se guarda en su cuenta, así se mantiene en otros dispositivos. Ambos temas cumplen el contraste de WCAG 2.2 AA. La vista de impresión se genera siempre en claro.</td></tr>
+      <tr><th>Auditoría</th><td>Registro de altas, bajas, cambios de asignación, tareas cargadas en nombre de otro y cambios de nota.</td></tr>
+      <tr><th>Seguridad</th><td>Contraseñas con hash, sesiones con expiración, ingreso con Google (OAuth) o con email y contraseña, recuperación por email, permisos verificados en el servidor. Acceso a Classroom solo de lectura y con permiso explícito del docente o del administrador.</td></tr>
+      <tr><th>Rendimiento</th><td>Pantallas del alumno en menos de 2 s en una tablet de gama baja con 4G; guardado de respuesta en menos de 500 ms.</td></tr>
+      <tr><th>IA</th><td>Tope de USD 50 por mes por instalación, con aviso al 80 % y pausa de los métodos con IA al llegar al tope. Registro del costo de cada generación, posibilidad de cambiar de proveedor. Respuestas siempre en español rioplatense neutro.</td></tr>
+      <tr><th>Disponibilidad</th><td>Copias de seguridad diarias, objetivo de 99,5 % en horario escolar.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= MAPA ================= -->
+<section id="mapa">
+  <div class="eyebrow">Inventario</div>
+  <h2>Mapa de pantallas</h2>
+  <div class="grid2">
+    <div class="card"><h3>Comunes</h3><p class="muted" style="margin:0">C1 Ingreso · C2 Recuperar contraseña · C3 Notificaciones</p></div>
+    <div class="card"><h3>Administrador</h3><p class="muted" style="margin:0">A1 Inicio · A2 Materias · A3 Docentes · A4 Alta/edición de docente · A5 Alumnos · A6 Ficha de alumno · A7 Asignaciones · A8 Tarea en nombre de docente · A9 Reportes · A10 Configuración y auditoría · A11 Importar desde Google Classroom</p></div>
+    <div class="card"><h3>Docente</h3><p class="muted" style="margin:0">D1 Inicio · D2 Mis alumnos · D3 Progreso del alumno · D4 Mis tareas y banco · D5 Elegir método · D6 Formulario: datos y asignación · D7 Editor por tipo (5 variantes) · D8 Foto: subir · D9 Foto: revisar OCR · D10 Texto: fuente y parámetros · D11 Texto: revisar generación · D12 Bandeja de corrección · D13 Corregir entrega · D14 Vista de impresión · D15 Docente en el celular · D16 Importar desde Google Classroom</p></div>
+    <div class="card"><h3>Alumno (celular)</h3><p class="muted" style="margin:0">S1 Hoy · S2 Mis tareas · S3 Antes de empezar · S4 Múltiple choice · S5 Verdadero o falso · S6 Unir con flechas · S7 Completar · S8 Tachar · S9 Revisar y entregar · S10 Entregada · S11 Resultado corregido · S12 Para rehacer · S13 Mi progreso · S14 Mis preferencias</p></div>
+  </div>
+</section>
+
+<!-- ================= MOCKUPS ================= -->
+<section id="mockups">
+  <div class="eyebrow">Wireframes de media fidelidad</div>
+  <h2>Mockups</h2>
+  <p>Los datos son de ejemplo. Las pantallas del alumno se muestran en celular, que es el uso principal; en tablet se ven igual, centradas y con más aire. Las del docente y el administrador se muestran en escritorio porque ahí es donde más se carga, pero son responsive, y D15 muestra las dos tareas clave del docente en el celular. En pantallas chicas, deslizá cada mockup hacia los costados.</p>
+
+  <!-- ===== COMUNES ===== -->
+  <div class="role-head" id="m-comun"><h3>Comunes</h3><span class="muted">Ingreso y avisos</span></div>
+
+  <figure class="mock"><figcaption><span class="code">C1</span><h4>Ingreso</h4><p>Una sola pantalla para todos los roles. La forma principal es "Continuar con Google", porque la mayoría de los alumnos tiene Gmail; también se puede entrar con email y contraseña.</p></figcaption>
+  <div class="scroll"><div class="frame sm"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/ingresar</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;min-height:420px">
+      <div style="background:var(--accent-soft);padding:40px;display:flex;flex-direction:column;justify-content:center;gap:12px">
+        <div style="font-family:var(--f-display);font-size:28px;font-weight:700">Fert<span style="color:var(--accent)">elligence</span></div>
+        <div style="font-size:16px;max-width:30ch">Tareas cortas, claras y a tu ritmo.</div>
+        <div class="ph" style="height:150px">Ilustración</div>
+      </div>
+      <div style="padding:36px 40px;display:flex;flex-direction:column;gap:12px">
+        <a class="btn lg" style="justify-content:center;font-size:15px"><span style="width:18px;height:18px;border-radius:50%;border:3px solid var(--accent);display:inline-block"></span>Continuar con Google</a>
+        <div class="row muted" style="font-size:12px"><span style="flex:1;height:1px;background:var(--line)"></span>o con tu email<span style="flex:1;height:1px;background:var(--line)"></span></div>
+        <div><span class="lbl">Email</span><div class="in full">mlopez@escuela.edu.ar</div></div>
+        <div><span class="lbl">Contraseña</span><div class="in full">••••••••••</div></div>
+        <div class="row"><span class="check on"></span> Recordarme <span class="sp"></span><a class="btn ghost">Olvidé mi contraseña</a></div>
+        <a class="btn pri" style="justify-content:center">Ingresar</a>
+        <div class="box sunk" style="margin-top:6px;font-size:12px">La misma pantalla sirve para alumnos, docentes y administradores. Solo entran cuentas que el administrador dio de alta: el email de Google tiene que coincidir con el registrado.</div>
+      </div>
+    </div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">C2 · C3</span><h4>Recuperar contraseña y notificaciones</h4><p>Recuperación por email para todos (quien entra con Google no la necesita). Panel de notificaciones desplegable desde la campana.</p></figcaption>
+  <div class="scroll"><div class="frame sm"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com</span></div>
+    <div class="split" style="padding:22px;gap:22px">
+      <div class="box" style="display:flex;flex-direction:column;gap:10px"><h6>Recuperar contraseña</h6><p style="margin:0;color:var(--muted)">Te mandamos un enlace para crear una nueva. Vence en 30 minutos.</p><div><span class="lbl">Email</span><div class="in full">mlopez@escuela.edu.ar</div></div><a class="btn pri" style="justify-content:center">Enviar enlace</a><a class="btn ghost">Volver a ingresar</a></div>
+      <div class="box" style="padding:0"><div style="padding:10px 14px;border-bottom:1px solid var(--line)" class="row"><b>Notificaciones</b><span class="sp"></span><a class="btn ghost">Marcar todas como leídas</a></div>
+        <div style="padding:10px 14px;border-bottom:1px solid var(--line);background:var(--accent-soft)"><b>Tomás R. entregó</b> "Estados del agua"<div class="muted" style="font-size:11.5px">Hace 5 min · Ciencias Naturales</div></div>
+        <div style="padding:10px 14px;border-bottom:1px solid var(--line);background:var(--accent-soft)"><b>3 tareas vencen mañana</b> sin entregar<div class="muted" style="font-size:11.5px">Hace 1 h</div></div>
+        <div style="padding:10px 14px;border-bottom:1px solid var(--line)"><b>Generación lista:</b> "La Revolución de Mayo" (8 ítems)<div class="muted" style="font-size:11.5px">Ayer</div></div>
+        <div style="padding:10px 14px"><b>Administración</b> te asignó a Lucía P. en Matemática<div class="muted" style="font-size:11.5px">Lun 13 oct</div></div>
+      </div>
+    </div>
+  </div></div></figure>
+
+  <!-- ===== ADMIN ===== -->
+  <div class="role-head" id="m-admin"><h3>Administrador</h3><span class="muted">Gestión de la institución</span></div>
+
+  <figure class="mock"><figcaption><span class="code">A1</span><h4>Inicio del administrador</h4><p>Estado general, alertas que requieren acción y accesos rápidos.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin</span></div>
+    <div class="app"><div class="side" data-side="admin:Inicio"></div>
+    <div class="mn">
+      <div class="top"><div><div class="crumbs">Ciclo lectivo 2026</div><h5>Hola, Graciela</h5></div><div class="row"><a class="btn">Importar planilla</a><a class="btn pri">+ Alumno</a></div></div>
+      <div class="kpis"><div class="kpi"><div class="v">142</div><div class="k">Alumnos activos</div></div><div class="kpi"><div class="v">23</div><div class="k">Docentes</div></div><div class="kpi"><div class="v">312</div><div class="k">Tareas esta semana</div></div><div class="kpi"><div class="v">81 %</div><div class="k">Entregadas a tiempo</div></div></div>
+      <div class="split r">
+        <div class="box"><h6>Requiere atención</h6>
+          <table class="ui"><tr><td><span class="pill p-bad">Sin docente</span></td><td>Lucía P. no tiene docente en Inglés</td><td><a class="btn ghost">Asignar</a></td></tr>
+          <tr><td><span class="pill p-done">Inactivo</span></td><td>4 alumnos sin actividad hace 7 días</td><td><a class="btn ghost">Ver</a></td></tr>
+          <tr><td><span class="pill p-done">Sin corregir</span></td><td>38 entregas esperan corrección más de 5 días</td><td><a class="btn ghost">Ver</a></td></tr>
+          <tr><td><span class="pill p-mute">IA</span></td><td>IA: USD 36 de 50 usados este mes</td><td><a class="btn ghost">Detalle</a></td></tr></table>
+        </div>
+        <div class="box"><h6>Entregas por materia</h6>
+          <div style="display:grid;gap:8px">
+            <div>Matemática <span class="muted" style="float:right">88 %</span><div class="bar-h ok"><i style="width:88%"></i></div></div>
+            <div>Prácticas del Lenguaje <span class="muted" style="float:right">79 %</span><div class="bar-h ok"><i style="width:79%"></i></div></div>
+            <div>Ciencias Naturales <span class="muted" style="float:right">74 %</span><div class="bar-h ok"><i style="width:74%"></i></div></div>
+            <div>Ciencias Sociales <span class="muted" style="float:right">66 %</span><div class="bar-h ok"><i style="width:66%"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A2</span><h4>Materias</h4><p>Listado con búsqueda y alta en panel lateral. Una materia no se borra si tiene tareas; se archiva.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/materias</span></div>
+    <div class="app"><div class="side" data-side="admin:Materias"></div>
+    <div class="mn">
+      <div class="top"><h5>Materias</h5><a class="btn pri">+ Nueva materia</a></div>
+      <div class="split r">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="row"><div class="in" style="flex:1">Buscar materia…</div><span class="chip on">Activas</span><span class="chip">Archivadas</span></div>
+          <table class="ui"><thead><tr><th>Materia</th><th>Área</th><th>Docentes</th><th>Alumnos</th><th></th></tr></thead><tbody>
+          <tr><td><b>Matemática</b></td><td>Exactas</td><td>5</td><td>98</td><td><a class="btn ghost">Editar</a></td></tr>
+          <tr><td><b>Prácticas del Lenguaje</b></td><td>Lengua</td><td>4</td><td>102</td><td><a class="btn ghost">Editar</a></td></tr>
+          <tr style="background:var(--accent-soft)"><td><b>Ciencias Naturales</b></td><td>Ciencias</td><td>3</td><td>76</td><td><a class="btn ghost">Editar</a></td></tr>
+          <tr><td><b>Ciencias Sociales</b></td><td>Ciencias</td><td>3</td><td>71</td><td><a class="btn ghost">Editar</a></td></tr>
+          <tr><td><b>Inglés</b></td><td>Lenguas extranjeras</td><td>2</td><td>54</td><td><a class="btn ghost">Editar</a></td></tr>
+          </tbody></table>
+        </div>
+        <div class="box" style="display:flex;flex-direction:column;gap:10px"><h6>Editar materia</h6>
+          <div><span class="lbl">Nombre</span><div class="in full">Ciencias Naturales</div></div>
+          <div><span class="lbl">Área</span><div class="in full">Ciencias ▾</div></div>
+          <div><span class="lbl">Color e ícono (ayuda visual al alumno)</span><div class="row"><span style="width:22px;height:22px;border-radius:6px;background:var(--ok);display:inline-block"></span><span style="width:22px;height:22px;border-radius:6px;background:var(--accent);display:inline-block"></span><span style="width:22px;height:22px;border-radius:6px;background:var(--sun);display:inline-block;outline:2px solid var(--ink)"></span><span style="width:22px;height:22px;border-radius:6px;background:var(--bad);display:inline-block"></span></div></div>
+          <div><span class="lbl">Descripción</span><div class="in full area">Seres vivos, materia y energía.</div></div>
+          <div class="row"><a class="btn danger">Archivar</a><span class="sp"></span><a class="btn">Cancelar</a><a class="btn pri">Guardar</a></div>
+        </div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A3</span><h4>Docentes</h4><p>Listado con materias que dicta y cantidad de alumnos. Acciones masivas: invitar por email, importar planilla.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/docentes</span></div>
+    <div class="app"><div class="side" data-side="admin:Docentes"></div>
+    <div class="mn">
+      <div class="top"><h5>Docentes</h5><div class="row"><a class="btn">Importar planilla</a><a class="btn pri">+ Nuevo docente</a></div></div>
+      <div class="row"><div class="in" style="flex:1">Buscar por nombre o email…</div><div class="in">Materia: Todas ▾</div><div class="in">Estado: Activos ▾</div></div>
+      <table class="ui"><thead><tr><th><span class="check"></span></th><th>Docente</th><th>Materias</th><th>Alumnos</th><th>Sin corregir</th><th>Estado</th><th></th></tr></thead><tbody>
+      <tr><td><span class="check"></span></td><td><div class="row"><span class="av">ML</span><div><b>Marcela López</b><div class="muted">mlopez@escuela.edu.ar</div></div></div></td><td><span class="chip">Cs. Naturales</span> <span class="chip">Matemática</span></td><td>18</td><td>6</td><td><span class="pill p-ok">Activo</span></td><td><a class="btn ghost">Ver</a></td></tr>
+      <tr><td><span class="check"></span></td><td><div class="row"><span class="av">JS</span><div><b>Jorge Sosa</b><div class="muted">jsosa@escuela.edu.ar</div></div></div></td><td><span class="chip">Cs. Sociales</span></td><td>24</td><td>12</td><td><span class="pill p-ok">Activo</span></td><td><a class="btn ghost">Ver</a></td></tr>
+      <tr><td><span class="check"></span></td><td><div class="row"><span class="av">AF</span><div><b>Ana Ferreyra</b><div class="muted">aferreyra@escuela.edu.ar</div></div></div></td><td><span class="chip">Prácticas del Lenguaje</span></td><td>31</td><td>0</td><td><span class="pill p-done">Invitación enviada</span></td><td><a class="btn ghost">Ver</a></td></tr>
+      <tr><td><span class="check"></span></td><td><div class="row"><span class="av">PR</span><div><b>Pablo Ríos</b><div class="muted">prios@escuela.edu.ar</div></div></div></td><td><span class="chip">Inglés</span></td><td>27</td><td>3</td><td><span class="pill p-ok">Activo</span></td><td><a class="btn ghost">Ver</a></td></tr>
+      </tbody></table>
+      <div class="row muted"><span>Mostrando 4 de 23</span><span class="sp"></span><a class="btn">Anterior</a><a class="btn">Siguiente</a></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A4</span><h4>Alta / edición de docente</h4><p>Datos personales, materias que dicta y alumnos asignados por materia. Desde acá también se puede cargar una tarea en su nombre.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/docentes/marcela-lopez</span></div>
+    <div class="app"><div class="side" data-side="admin:Docentes"></div>
+    <div class="mn">
+      <div class="top"><div><div class="crumbs">Docentes › Marcela López</div><h5>Marcela López</h5></div><div class="row"><a class="btn">Restablecer acceso</a><a class="btn">Cargar tarea en su nombre</a><a class="btn pri">Guardar</a></div></div>
+      <div class="tabs"><span class="on">Datos</span><span>Alumnos (18)</span><span>Tareas (64)</span><span>Actividad</span></div>
+      <div class="split">
+        <div class="box"><h6>Datos personales</h6><div class="fgrid two"><div><span class="lbl">Nombre</span><div class="in full">Marcela</div></div><div><span class="lbl">Apellido</span><div class="in full">López</div></div><div><span class="lbl">Email</span><div class="in full">mlopez@escuela.edu.ar</div></div><div><span class="lbl">DNI (opcional)</span><div class="in full">27.456.789</div></div></div></div>
+        <div class="box"><h6>Materias que dicta</h6><div class="row"><span class="chip on">Ciencias Naturales ×</span><span class="chip on">Matemática ×</span><span class="chip">+ Agregar</span></div>
+          <h6 style="margin-top:14px">Alumnos por materia</h6>
+          <table class="ui"><tr><td>Ciencias Naturales</td><td>11 alumnos</td><td><a class="btn ghost">Gestionar</a></td></tr><tr><td>Matemática</td><td>7 alumnos</td><td><a class="btn ghost">Gestionar</a></td></tr></table></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A5</span><h4>Alumnos</h4><p>Listado filtrable por curso, materia y docente, con indicador de actividad y alertas.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/alumnos</span></div>
+    <div class="app"><div class="side" data-side="admin:Alumnos"></div>
+    <div class="mn">
+      <div class="top"><h5>Alumnos</h5><div class="row"><a class="btn">Importar planilla</a><a class="btn">Importar desde Classroom</a><a class="btn pri">+ Nuevo alumno</a></div></div>
+      <div class="row"><div class="in" style="flex:1">Buscar alumno…</div><div class="in">Curso: 4° B ▾</div><div class="in">Materia: Todas ▾</div><span class="chip">Solo con alertas</span></div>
+      <table class="ui"><thead><tr><th>Alumno</th><th>Curso</th><th>Docentes</th><th>Pendientes</th><th>A tiempo</th><th>Última actividad</th><th></th></tr></thead><tbody>
+      <tr><td><div class="row"><span class="av">TR</span><b>Tomás Ramírez</b></div></td><td>4° B</td><td>4</td><td>2</td><td>92 %</td><td>Hoy 10:12</td><td><a class="btn ghost">Ficha</a></td></tr>
+      <tr><td><div class="row"><span class="av">LP</span><b>Lucía Pereyra</b> <span class="pill p-bad">Sin docente en Inglés</span></div></td><td>4° B</td><td>3</td><td>5</td><td>70 %</td><td>Ayer</td><td><a class="btn ghost">Ficha</a></td></tr>
+      <tr><td><div class="row"><span class="av">BM</span><b>Bruno Medina</b> <span class="pill p-done">Inactivo 8 días</span></div></td><td>4° B</td><td>4</td><td>7</td><td>48 %</td><td>11 oct</td><td><a class="btn ghost">Ficha</a></td></tr>
+      <tr><td><div class="row"><span class="av">VG</span><b>Valentina Gómez</b></div></td><td>4° B</td><td>4</td><td>0</td><td>100 %</td><td>Hoy 09:40</td><td><a class="btn ghost">Ficha</a></td></tr>
+      </tbody></table>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A6</span><h4>Ficha del alumno</h4><p>Datos, docentes asignados por materia, contacto de la familia (solo como dato, sin acceso), tareas y progreso.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/alumnos/tomas-ramirez</span></div>
+    <div class="app"><div class="side" data-side="admin:Alumnos"></div>
+    <div class="mn">
+      <div class="top"><div><div class="crumbs">Alumnos › 4° B</div><h5>Tomás Ramírez</h5></div><div class="row"><a class="btn">Restablecer contraseña</a><a class="btn pri">Guardar</a></div></div>
+      <div class="tabs"><span class="on">Datos y asignaciones</span><span>Tareas (41)</span><span>Progreso</span></div>
+      <div class="split">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="box"><h6>Datos</h6><div class="fgrid two"><div><span class="lbl">Nombre</span><div class="in full">Tomás</div></div><div><span class="lbl">Apellido</span><div class="in full">Ramírez</div></div><div><span class="lbl">Curso</span><div class="in full">4° B ▾</div></div><div><span class="lbl">Usuario</span><div class="in full">tomas.r · código 4B-NAT</div></div></div></div>
+          <div class="box"><h6>Contacto de la familia</h6><div class="row"><span class="av">CR</span><div>Carla Ramírez (madre)<div class="muted">carla.r@mail.com · 11 5555-0142</div></div><span class="sp"></span><a class="btn ghost">Editar</a></div><div class="muted" style="font-size:11.5px;margin-top:6px">Solo para contacto. La familia no ingresa al sistema.</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="box"><h6>Docentes asignados</h6><table class="ui"><thead><tr><th>Materia</th><th>Docente</th><th></th></tr></thead>
+            <tr><td>Ciencias Naturales</td><td>Marcela López</td><td><a class="btn ghost">Cambiar</a></td></tr>
+            <tr><td>Matemática</td><td>Marcela López</td><td><a class="btn ghost">Cambiar</a></td></tr>
+            <tr><td>Prácticas del Lenguaje</td><td>Ana Ferreyra</td><td><a class="btn ghost">Cambiar</a></td></tr>
+            <tr><td>Ciencias Sociales</td><td>Jorge Sosa</td><td><a class="btn ghost">Cambiar</a></td></tr></table><a class="btn ghost">+ Asignar materia</a></div>
+        </div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A7</span><h4>Asignaciones</h4><p>Matriz por curso: filas alumnos, columnas materias, celda el docente. Se puede asignar un docente a toda una columna de una vez.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/asignaciones</span></div>
+    <div class="app"><div class="side" data-side="admin:Asignaciones"></div>
+    <div class="mn">
+      <div class="top"><h5>Asignaciones</h5><div class="row"><div class="in">Curso: 4° B ▾</div><a class="btn pri">Guardar cambios (2)</a></div></div>
+      <table class="ui"><thead><tr><th>Alumno</th><th>Matemática ▾</th><th>Pr. del Lenguaje ▾</th><th>Cs. Naturales ▾</th><th>Cs. Sociales ▾</th><th>Inglés ▾</th></tr></thead><tbody>
+      <tr><td><b>Tomás Ramírez</b></td><td>M. López</td><td>A. Ferreyra</td><td>M. López</td><td>J. Sosa</td><td>P. Ríos</td></tr>
+      <tr><td><b>Lucía Pereyra</b></td><td>M. López</td><td>A. Ferreyra</td><td>M. López</td><td>J. Sosa</td><td style="background:var(--bad-soft)"><span class="in" style="color:var(--bad)">Elegir docente ▾</span></td></tr>
+      <tr><td><b>Bruno Medina</b></td><td style="background:var(--sun-soft)">R. Díaz <span class="muted">(cambiado)</span></td><td>A. Ferreyra</td><td>M. López</td><td>J. Sosa</td><td>P. Ríos</td></tr>
+      <tr><td><b>Valentina Gómez</b></td><td>M. López</td><td>A. Ferreyra</td><td>M. López</td><td>J. Sosa</td><td>P. Ríos</td></tr>
+      <tr><td><b>Joaquín Benítez</b></td><td>M. López</td><td>A. Ferreyra</td><td><span class="muted">No cursa</span></td><td>J. Sosa</td><td>P. Ríos</td></tr>
+      </tbody></table>
+      <div class="note" style="margin:0;font-size:12.5px">Al cambiar el docente de una asignación con tareas pendientes, el sistema pregunta si las tareas pasan al nuevo docente o quedan con el anterior para corregir.</div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A8</span><h4>Cargar tarea en nombre de un docente</h4><p>El administrador elige el docente y entra al mismo flujo de creación (D5 a D11) con un aviso permanente de "actuando en nombre de". El docente recibe una notificación. Con el mismo aviso, el administrador puede entrar a la bandeja de corrección de un docente y aprobar correcciones en su nombre.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/tareas/nueva</span></div>
+    <div class="app"><div class="side" data-side="admin:Tareas"></div>
+    <div class="mn">
+      <div class="banner">Estás creando una tarea en nombre de Marcela López. Quedará registrada con tu usuario. <span class="sp"></span><a class="btn">Cambiar docente</a></div>
+      <div class="top"><h5>Nueva tarea</h5></div>
+      <div class="split l">
+        <div class="box"><h6>1 · Elegí el docente</h6><div class="in full">Buscar docente…</div>
+          <div style="margin-top:8px;display:grid;gap:6px"><div class="opt right"><span class="radio on"></span><b>Marcela López</b><span class="sp"></span><span class="muted">Cs. Nat · Mat</span></div><div class="opt"><span class="radio"></span>Jorge Sosa<span class="sp"></span><span class="muted">Cs. Soc</span></div><div class="opt"><span class="radio"></span>Ana Ferreyra<span class="sp"></span><span class="muted">Pr. Lenguaje</span></div></div></div>
+        <div class="box"><h6>2 · Elegí cómo crearla</h6>
+          <div class="methods"><div class="method on"><div class="ic">F</div><h6>Formulario</h6><span class="muted">Cargás las preguntas a mano.</span></div><div class="method"><div class="ic">OCR</div><h6>Desde una foto</h6><span class="muted">Subís el ejercicio y el sistema lo arma.</span></div><div class="method"><div class="ic">IA</div><h6>Desde un texto</h6><span class="muted">Escribís, dictás o fotografiás un texto y se generan los ítems.</span></div></div>
+          <div class="row" style="margin-top:12px"><span class="sp"></span><a class="btn pri">Continuar</a></div></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A9</span><h4>Reportes</h4><p>Cumplimiento y resultados por curso, materia, docente y alumno. Exportable a Excel y PDF.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/reportes</span></div>
+    <div class="app"><div class="side" data-side="admin:Reportes"></div>
+    <div class="mn">
+      <div class="top"><h5>Reportes</h5><div class="row"><div class="in">1 sep – 19 oct ▾</div><div class="in">Curso: Todos ▾</div><a class="btn">Exportar</a></div></div>
+      <div class="tabs"><span class="on">Por materia</span><span>Por docente</span><span>Por alumno</span><span>Por tipo de tarea</span></div>
+      <div class="split r">
+        <div class="box"><h6>Tareas asignadas vs. aprobadas por semana</h6>
+          <svg viewBox="0 0 520 170" width="100%" aria-label="Gráfico de barras">
+            <g style="stroke:var(--line)"><line x1="30" y1="140" x2="510" y2="140"/><line x1="30" y1="95" x2="510" y2="95" stroke-dasharray="3 4"/><line x1="30" y1="50" x2="510" y2="50" stroke-dasharray="3 4"/></g>
+            <g style="fill:var(--accent-soft)"><rect x="50" y="60" width="26" height="80"/><rect x="130" y="50" width="26" height="90"/><rect x="210" y="45" width="26" height="95"/><rect x="290" y="40" width="26" height="100"/><rect x="370" y="52" width="26" height="88"/><rect x="450" y="38" width="26" height="102"/></g>
+            <g style="fill:var(--accent)"><rect x="78" y="82" width="26" height="58"/><rect x="158" y="76" width="26" height="64"/><rect x="238" y="70" width="26" height="70"/><rect x="318" y="62" width="26" height="78"/><rect x="398" y="74" width="26" height="66"/><rect x="478" y="58" width="26" height="82"/></g>
+            <g style="fill:var(--muted);font-size:10px;font-family:var(--f-mono)"><text x="4" y="143">0</text><text x="4" y="98">50</text><text x="0" y="53">100</text><text x="60" y="158">S36</text><text x="140" y="158">S37</text><text x="220" y="158">S38</text><text x="300" y="158">S39</text><text x="380" y="158">S40</text><text x="460" y="158">S41</text></g>
+          </svg>
+          <div class="row muted" style="font-size:11.5px"><span style="width:10px;height:10px;background:var(--accent-soft);display:inline-block"></span>Asignadas <span style="width:10px;height:10px;background:var(--accent);display:inline-block;margin-left:10px"></span>Aprobadas</div>
+        </div>
+        <div class="box"><h6>Aprobación por tipo</h6><div style="display:grid;gap:8px">
+          <div>Múltiple choice <span style="float:right">82 %</span><div class="bar-h ok"><i style="width:82%"></i></div></div>
+          <div>Verdadero o falso <span style="float:right">77 %</span><div class="bar-h ok"><i style="width:77%"></i></div></div>
+          <div>Unir con flechas <span style="float:right">74 %</span><div class="bar-h ok"><i style="width:74%"></i></div></div>
+          <div>Tachar <span style="float:right">69 %</span><div class="bar-h ok"><i style="width:69%"></i></div></div>
+          <div>Completar <span style="float:right">61 %</span><div class="bar-h ok"><i style="width:61%"></i></div></div></div></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A10</span><h4>Configuración y auditoría</h4><p>Parámetros de la institución (ciclo lectivo, umbral de aprobación, IA, notificaciones) y registro de acciones.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/configuracion</span></div>
+    <div class="app"><div class="side" data-side="admin:Configuración"></div>
+    <div class="mn">
+      <div class="top"><h5>Configuración</h5><a class="btn pri">Guardar</a></div>
+      <div class="split">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="box"><h6>Ciclo lectivo</h6><div class="fgrid two"><div><span class="lbl">Ciclo activo</span><div class="in full">2026 ▾</div></div><div><span class="lbl">Cierre</span><div class="in full">12/12/2026</div></div></div></div>
+          <div class="box"><h6>Corrección</h6><div class="fgrid two"><div><span class="lbl">Umbral de aprobación</span><div class="in full">7 (70 %)</div></div><div><span class="lbl">Escala</span><div class="in full">0 a 10, enteros ▾</div></div></div>
+            <div class="row" style="margin-top:10px;font-size:12px;color:var(--muted)">La corrección siempre la aprueba el docente. Las entregas fuera de término se aceptan y quedan marcadas.</div></div>
+          <div class="box"><h6>Inteligencia artificial</h6><div class="row"><span class="tog on"></span>Creación desde foto</div><div class="row" style="margin-top:6px"><span class="tog on"></span>Generación desde texto</div><div class="row" style="margin-top:6px"><span class="tog on"></span>Importar desde Google Classroom</div><div style="margin-top:8px">Consumo del mes <span style="float:right">USD 36 de 50</span><div class="bar-h"><i style="width:72%"></i></div></div><div class="muted" style="font-size:11.5px;margin-top:6px">Aviso al 80 %. Al llegar al tope se pausan los métodos con IA hasta el 1° del mes siguiente; el formulario sigue funcionando.</div></div>
+          <div class="box"><h6>Google</h6><div class="row"><span class="tog on"></span>Permitir ingreso con Google</div><div class="row" style="margin-top:6px"><span class="tog on"></span>Mostrar logros y rachas a los alumnos</div></div>
+        </div>
+        <div class="box"><h6>Auditoría</h6><table class="ui">
+          <tr><td class="muted">19/10 10:31</td><td><b>G. Paz</b> creó "Fracciones" en nombre de <b>M. López</b></td></tr>
+          <tr><td class="muted">19/10 09:12</td><td><b>J. Sosa</b> cambió nota de B. Medina: 5 → 6</td></tr>
+          <tr><td class="muted">18/10 17:40</td><td><b>G. Paz</b> asignó R. Díaz a B. Medina (Matemática)</td></tr>
+          <tr><td class="muted">18/10 15:02</td><td><b>G. Paz</b> importó 34 alumnos desde planilla</td></tr>
+          <tr><td class="muted">17/10 11:20</td><td><b>A. Ferreyra</b> restableció contraseña de L. Pereyra</td></tr></table></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">A11</span><h4>Importar desde Google Classroom</h4><p>El administrador conecta la cuenta de Google de la escuela, elige cursos de Classroom y los relaciona con cursos y materias de Fertelligence. El sistema crea alumnos y docentes que no existan (reconociéndolos por email) y propone las asignaciones. Se puede volver a importar cuando haya cambios; nunca se borra a nadie.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/admin/importar/classroom</span></div>
+    <div class="app"><div class="side" data-side="admin:Alumnos"></div>
+    <div class="mn">
+      <div class="top"><div><div class="crumbs">Alumnos › Importar · conectado como admin@escuela.edu.ar (solo lectura)</div><h5>Importar desde Google Classroom</h5></div></div>
+      <div class="row"><span class="pill p-ok">1 Elegir cursos</span><span class="muted">›</span><span class="pill p-new">2 Relacionar</span><span class="muted">›</span><span class="pill p-mute">3 Confirmar</span></div>
+      <table class="ui"><thead><tr><th>Curso en Classroom</th><th>Docente en Classroom</th><th>Alumnos</th><th>Curso en Fertelligence</th><th>Materia</th><th>Docente</th></tr></thead><tbody>
+        <tr><td><b>4° B Naturales 2026</b></td><td>mlopez@escuela.edu.ar</td><td>28</td><td><div class="in">4° B ▾</div></td><td><div class="in">Ciencias Naturales ▾</div></td><td>Marcela López <span class="pill p-ok">existe</span></td></tr>
+        <tr><td><b>4° B Matemática 2026</b></td><td>rdiaz@escuela.edu.ar</td><td>28</td><td><div class="in">4° B ▾</div></td><td><div class="in">Matemática ▾</div></td><td>Roberto Díaz <span class="pill p-new">nuevo</span></td></tr>
+        <tr><td><b>Taller de lectura</b></td><td>aferreyra@escuela.edu.ar</td><td>12</td><td><div class="in">5° A ▾</div></td><td><div class="in" style="color:var(--bad)">Elegir materia ▾</div></td><td>Ana Ferreyra <span class="pill p-ok">existe</span></td></tr>
+      </tbody></table>
+      <div class="split">
+        <div class="box"><h6>Resumen</h6><table class="ui"><tr><td>Alumnos nuevos</td><td><b>34</b></td></tr><tr><td>Alumnos que ya existían (mismo email)</td><td><b>22</b></td></tr><tr><td>Docentes nuevos</td><td><b>1</b></td></tr><tr><td>Asignaciones a crear</td><td><b>68</b></td></tr></table></div>
+        <div class="box" style="display:flex;flex-direction:column;gap:8px"><h6>Opciones</h6><div class="row"><span class="check on"></span>Enviar email de bienvenida a los nuevos</div><div class="row"><span class="check"></span>Importar también alumnos invitados que todavía no aceptaron</div><div class="muted" style="font-size:12px">Falta elegir la materia de "Taller de lectura" para continuar.</div><div class="row"><span class="sp"></span><a class="btn">Atrás</a><a class="btn pri">Siguiente: confirmar</a></div></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <!-- ===== DOCENTE ===== -->
+  <div class="role-head" id="m-doc"><h3>Docente</h3><span class="muted">Crear, asignar y corregir</span></div>
+
+  <figure class="mock"><figcaption><span class="code">D1</span><h4>Inicio del docente</h4><p>Lo urgente arriba: entregas por corregir y tareas por vencer. Accesos directos a los tres métodos de creación.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente</span></div>
+    <div class="app"><div class="side" data-side="docente:Inicio"></div>
+    <div class="mn">
+      <div class="top"><h5>Buen día, Marcela</h5><a class="btn pri">+ Nueva tarea</a></div>
+      <div class="kpis"><div class="kpi"><div class="v">6</div><div class="k">Para corregir</div></div><div class="kpi"><div class="v">9</div><div class="k">Vencen esta semana</div></div><div class="kpi"><div class="v">2</div><div class="k">Alumnos con alerta</div></div><div class="kpi"><div class="v">3</div><div class="k">Borradores</div></div></div>
+      <div class="split r">
+        <div class="box"><h6>Para corregir</h6><table class="ui">
+          <tr><td><b>Tomás R.</b></td><td>Estados del agua</td><td><span class="pill p-mute">Múltiple choice</span></td><td>Sugerido 8/10</td><td><a class="btn pri">Corregir</a></td></tr>
+          <tr><td><b>Lucía P.</b></td><td>El ciclo del agua</td><td><span class="pill p-mute">V o F + justif.</span></td><td>Revisar 3 justif.</td><td><a class="btn pri">Corregir</a></td></tr>
+          <tr><td><b>Valentina G.</b></td><td>Fracciones equivalentes</td><td><span class="pill p-mute">Unir</span></td><td>Sugerido 10/10</td><td><a class="btn pri">Corregir</a></td></tr></table></div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="box"><h6>Crear rápido</h6><div style="display:grid;gap:6px"><a class="btn">Formulario</a><a class="btn">Desde una foto</a><a class="btn">Desde un texto</a><a class="btn">Desde Classroom</a></div></div>
+          <div class="box"><h6>Alertas</h6><div style="font-size:12.5px"><b>Bruno M.</b> no entra hace 8 días.<br><b>Lucía P.</b> desaprobó 3 tareas seguidas de Completar.</div></div>
+        </div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D2</span><h4>Mis alumnos</h4><p>Alumnos asignados, agrupados por materia, con estado de entregas.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/alumnos</span></div>
+    <div class="app"><div class="side" data-side="docente:Mis alumnos"></div>
+    <div class="mn">
+      <div class="top"><h5>Mis alumnos</h5><div class="row"><span class="chip on">Todas</span><span class="chip">Cs. Naturales (11)</span><span class="chip">Matemática (7)</span></div></div>
+      <div class="grid3" style="grid-template-columns:repeat(3,1fr);gap:10px">
+        <div class="box"><div class="row"><span class="av">TR</span><div><b>Tomás Ramírez</b><div class="muted">4° B · Cs. Nat, Mat</div></div></div><div style="margin-top:10px">Al día <span style="float:right">92 %</span><div class="bar-h ok"><i style="width:92%"></i></div></div><div class="row" style="margin-top:8px"><span class="pill p-new">2 nuevas</span><span class="pill p-done">1 por corregir</span></div></div>
+        <div class="box"><div class="row"><span class="av">LP</span><div><b>Lucía Pereyra</b><div class="muted">4° B · Cs. Nat, Mat</div></div></div><div style="margin-top:10px">Al día <span style="float:right">70 %</span><div class="bar-h ok"><i style="width:70%"></i></div></div><div class="row" style="margin-top:8px"><span class="pill p-bad">3 desaprobadas</span><span class="pill p-done">1 por corregir</span></div></div>
+        <div class="box"><div class="row"><span class="av">BM</span><div><b>Bruno Medina</b><div class="muted">4° B · Cs. Nat</div></div></div><div style="margin-top:10px">Al día <span style="float:right">48 %</span><div class="bar-h ok"><i style="width:48%"></i></div></div><div class="row" style="margin-top:8px"><span class="pill p-done">Inactivo 8 días</span></div></div>
+        <div class="box"><div class="row"><span class="av">VG</span><div><b>Valentina Gómez</b><div class="muted">4° B · Mat</div></div></div><div style="margin-top:10px">Al día <span style="float:right">100 %</span><div class="bar-h ok"><i style="width:100%"></i></div></div><div class="row" style="margin-top:8px"><span class="pill p-done">1 por corregir</span></div></div>
+        <div class="box"><div class="row"><span class="av">JB</span><div><b>Joaquín Benítez</b><div class="muted">4° B · Mat</div></div></div><div style="margin-top:10px">Al día <span style="float:right">85 %</span><div class="bar-h ok"><i style="width:85%"></i></div></div><div class="row" style="margin-top:8px"><span class="pill p-new">1 nueva</span></div></div>
+        <div class="box"><div class="row"><span class="av">MS</span><div><b>Martina Suárez</b><div class="muted">5° A · Cs. Nat</div></div></div><div style="margin-top:10px">Al día <span style="float:right">78 %</span><div class="bar-h ok"><i style="width:78%"></i></div></div><div class="row" style="margin-top:8px"><span class="pill p-mute">Sin pendientes</span></div></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D3</span><h4>Progreso del alumno</h4><p>Historial de tareas y rendimiento por tipo de tarea. Ayuda a decidir qué conviene reforzar.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/alumnos/lucia-pereyra</span></div>
+    <div class="app"><div class="side" data-side="docente:Mis alumnos"></div>
+    <div class="mn">
+      <div class="top"><div><div class="crumbs">Mis alumnos › Lucía Pereyra</div><h5>Lucía Pereyra</h5></div><div class="row"><a class="btn">Imprimir resumen</a><a class="btn pri">+ Tarea para Lucía</a></div></div>
+      <div class="kpis"><div class="kpi"><div class="v">24</div><div class="k">Tareas asignadas</div></div><div class="kpi"><div class="v">70 %</div><div class="k">Entregadas a tiempo</div></div><div class="kpi"><div class="v">6,4</div><div class="k">Promedio sobre 10</div></div><div class="kpi"><div class="v">12 min</div><div class="k">Tiempo medio por tarea</div></div></div>
+      <div class="split">
+        <div class="box"><h6>Por tipo de tarea</h6><div style="display:grid;gap:8px">
+          <div>Múltiple choice <span style="float:right">8,1</span><div class="bar-h ok"><i style="width:81%"></i></div></div>
+          <div>Unir con flechas <span style="float:right">7,5</span><div class="bar-h ok"><i style="width:75%"></i></div></div>
+          <div>V o F <span style="float:right">6,2</span><div class="bar-h ok"><i style="width:62%"></i></div></div>
+          <div>Completar <span style="float:right;color:var(--bad)">4,0</span><div class="bar-h"><i style="width:40%;background:var(--bad)"></i></div></div></div>
+          <p class="muted" style="margin:10px 0 0;font-size:12px">Completar es el tipo donde más le cuesta.</p></div>
+        <div class="box"><h6>Últimas tareas</h6><table class="ui">
+          <tr><td>El ciclo del agua</td><td><span class="pill p-done">Completada</span></td><td>—</td></tr>
+          <tr><td>Partes de la planta</td><td><span class="pill p-corr">Corregida</span></td><td><span class="pill p-bad">4/10</span></td></tr>
+          <tr><td>Mezclas y soluciones</td><td><span class="pill p-corr">Corregida</span></td><td><span class="pill p-ok">8/10</span></td></tr>
+          <tr><td>Fracciones</td><td><span class="pill p-new">Nueva</span></td><td>vence 22/10</td></tr></table></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D4</span><h4>Mis tareas y banco</h4><p>Todas las tareas asignadas con filtros por estado, materia, alumno y tipo. La pestaña Banco guarda plantillas para reutilizar.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas</span></div>
+    <div class="app"><div class="side" data-side="docente:Tareas"></div>
+    <div class="mn">
+      <div class="top"><h5>Tareas</h5><a class="btn pri">+ Nueva tarea</a></div>
+      <div class="tabs"><span class="on">Asignadas (64)</span><span>Borradores (3)</span><span>Programadas (5)</span><span>Banco de tareas (28)</span></div>
+      <div class="row"><div class="in" style="flex:1">Buscar…</div><div class="in">Materia ▾</div><div class="in">Alumno ▾</div><div class="in">Tipo ▾</div><div class="in">Estado ▾</div></div>
+      <table class="ui"><thead><tr><th>Tarea</th><th>Alumno</th><th>Materia</th><th>Tipo</th><th>Inicio</th><th>Entrega</th><th>Estado</th><th></th></tr></thead><tbody>
+      <tr><td><b>Estados del agua</b></td><td>Tomás R.</td><td>Cs. Nat</td><td>Múltiple choice</td><td>14/10</td><td>18/10</td><td><span class="pill p-done">Completada</span></td><td><a class="btn ghost">⋯</a></td></tr>
+      <tr><td><b>El ciclo del agua</b></td><td>Lucía P.</td><td>Cs. Nat</td><td>V o F</td><td>14/10</td><td>18/10</td><td><span class="pill p-done">Completada</span></td><td><a class="btn ghost">⋯</a></td></tr>
+      <tr><td><b>Partes de la planta</b></td><td>Lucía P.</td><td>Cs. Nat</td><td>Unir</td><td>07/10</td><td>10/10</td><td><span class="pill p-corr">Corregida</span> <span class="pill p-bad">Desap.</span></td><td><a class="btn ghost">⋯</a></td></tr>
+      <tr><td><b>Fracciones equivalentes</b></td><td>3 alumnos</td><td>Mat</td><td>Completar</td><td>20/10</td><td>22/10</td><td><span class="pill p-new">Nueva</span></td><td><a class="btn ghost">⋯</a></td></tr>
+      <tr><td><b>Animales vertebrados</b></td><td>Bruno M.</td><td>Cs. Nat</td><td>Tachar</td><td>08/10</td><td>12/10</td><td><span class="pill p-mute">Vencida</span></td><td><a class="btn ghost">⋯</a></td></tr>
+      </tbody></table>
+      <div class="box sunk" style="font-size:12px">Menú ⋯ : Ver · Duplicar · Asignar a otro alumno · Guardar en banco · Imprimir · Extender plazo · Archivar</div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D5</span><h4>Nueva tarea: elegir método</h4><p>Punto de partida común. Muestra qué hace cada método y cuánto tarda.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="top"><h5>¿Cómo querés crear la tarea?</h5><a class="btn ghost">Empezar desde el banco</a></div>
+      <div class="methods" style="grid-template-columns:repeat(4,1fr)">
+        <div class="method"><div class="ic">F</div><h6>Formulario</h6><span class="muted">Elegís el tipo y cargás cada pregunta, la respuesta correcta y la explicación.</span><span class="pill p-mute" style="align-self:start">5–10 min</span></div>
+        <div class="method"><div class="ic">OCR</div><h6>Desde una foto</h6><span class="muted">Sacale una foto a un ejercicio del libro o de una fotocopia. El sistema detecta el tipo y lo arma. Vos revisás.</span><span class="pill p-mute" style="align-self:start">1–3 min</span></div>
+        <div class="method on"><div class="ic">IA</div><h6>Desde un texto</h6><span class="muted">Pegá, dictá o fotografiá un texto del tema. Elegís tipo y cantidad, y se generan las preguntas con sus respuestas.</span><span class="pill p-mute" style="align-self:start">1–2 min</span></div>
+        <div class="method"><div class="ic">GC</div><h6>Desde Google Classroom</h6><span class="muted">Elegís un curso y un material o cuestionario de Classroom, y se convierte en una tarea para revisar.</span><span class="pill p-mute" style="align-self:start">1–2 min</span></div>
+      </div>
+      <div class="row"><span class="sp"></span><a class="btn">Cancelar</a><a class="btn pri">Continuar</a></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D6</span><h4>Formulario: datos generales y asignación</h4><p>Asistente en tres pasos (Datos · Ítems · Asignar). Acá se eligen materia, alumnos, tipo, fechas y umbral.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/formulario</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="row"><span class="pill p-new">1 Datos</span><span class="muted">›</span><span class="pill p-mute">2 Ítems</span><span class="muted">›</span><span class="pill p-mute">3 Revisar y publicar</span></div>
+      <div class="split r">
+        <div class="box" style="display:flex;flex-direction:column;gap:12px">
+          <div><span class="lbl">Título</span><div class="in full">Estados del agua</div></div>
+          <div><span class="lbl">Consigna general (lo primero que lee el alumno)</span><div class="in full area">Leé cada pregunta y elegí la respuesta correcta. Podés escuchar la pregunta con el botón.</div></div>
+          <div class="fgrid"><div><span class="lbl">Materia</span><div class="in full">Ciencias Naturales ▾</div></div><div><span class="lbl">Tipo de tarea</span><div class="in full">Múltiple choice ▾</div></div><div><span class="lbl">Respuestas</span><div class="row"><span class="radio on"></span>Única <span class="radio"></span>Varias</div></div></div>
+          <div class="fgrid"><div><span class="lbl">Fecha de inicio</span><div class="in full">20/10/2026 08:00</div></div><div><span class="lbl">Fecha de entrega</span><div class="in full">24/10/2026 23:59</div></div><div><span class="lbl">Aprueba con</span><div class="in full">7 / 10 (70 %)</div></div></div>
+          <div class="row"><span class="lbl" style="margin:0">Si hay que rehacerla:</span><span class="radio"></span>Toda la tarea <span class="radio on" style="margin-left:10px"></span>Solo los ítems incorrectos</div>
+          <div class="row"><span class="check on"></span>Mezclar orden de opciones <span class="check on" style="margin-left:14px"></span>Avisar al alumno un día antes del vencimiento</div>
+        </div>
+        <div class="box"><h6>Alumnos</h6><div class="in full">Buscar en mis alumnos de Cs. Naturales…</div>
+          <div style="margin-top:8px;display:grid;gap:4px"><div class="row"><span class="check on"></span>Tomás Ramírez</div><div class="row"><span class="check on"></span>Lucía Pereyra</div><div class="row"><span class="check"></span>Bruno Medina</div><div class="row"><span class="check"></span>Martina Suárez</div></div>
+          <p class="muted" style="font-size:12px;margin:10px 0 0">Se crea una tarea independiente por alumno, con su propia entrega y nota.</p></div>
+      </div>
+      <div class="row"><a class="btn">Guardar borrador</a><span class="sp"></span><a class="btn pri">Siguiente: ítems</a></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D7a</span><h4>Editor de ítems: múltiple choice</h4><p>Cada ítem lleva su clave de corrección: opción correcta, puntaje y texto explicativo. Panel derecho con vista previa como alumno.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/formulario</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="row"><span class="pill p-ok">1 Datos</span><span class="muted">›</span><span class="pill p-new">2 Ítems</span><span class="muted">›</span><span class="pill p-mute">3 Revisar y publicar</span><span class="sp"></span><span class="muted">Total: 10 puntos · 4 ítems</span></div>
+      <div class="split r">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="box"><div class="row"><b>Pregunta 1</b><span class="sp"></span><span class="drag">⋮⋮</span><a class="btn ghost">Duplicar</a><a class="btn ghost danger">Eliminar</a></div>
+            <div style="margin-top:8px"><span class="lbl">Pregunta</span><div class="in full">¿En qué estado está el agua cuando forma un cubito de hielo?</div></div>
+            <div style="margin-top:8px"><span class="lbl">Opciones (marcá la correcta)</span>
+              <div class="opt"><span class="radio"></span>Líquido</div><div class="opt right"><span class="radio on"></span>Sólido<span class="sp"></span><span class="mark-ok">Correcta</span></div><div class="opt"><span class="radio"></span>Gaseoso</div><div class="opt"><span class="radio"></span>Plasma</div><a class="btn ghost">+ Opción</a></div>
+            <div class="fgrid" style="grid-template-columns:120px 1fr;margin-top:8px"><div><span class="lbl">Puntaje</span><div class="in full">2,5</div></div><div><span class="lbl">Explicación (la ve el alumno después de la corrección)</span><div class="in full">El hielo es agua en estado sólido: sus partículas están muy juntas y no se mueven de lugar.</div></div></div>
+            <div class="row" style="margin-top:8px"><span class="muted" style="font-size:12px">Resaltar palabras clave:</span><span class="chip on">hielo</span><span class="chip">+ palabra</span><span class="sp"></span><a class="btn ghost">Adjuntar imagen</a></div></div>
+          <div class="box sunk row"><b>Pregunta 2</b> <span class="muted">Cuando el agua hierve, se convierte en…</span><span class="sp"></span><span class="muted">2,5 pts</span></div>
+          <a class="btn" style="justify-content:center">+ Agregar pregunta</a>
+        </div>
+        <div class="box sunk"><h6>Vista previa del alumno</h6><div style="background:var(--paper);border-radius:10px;padding:14px;border:1px solid var(--line)"><div class="muted" style="font-size:11px">Pregunta 1 de 4</div><div style="font-family:var(--f-display);font-size:15px;margin:6px 0 10px">¿En qué estado está el agua cuando forma un cubito de <mark style="background:var(--sun-soft);color:inherit">hielo</mark>?</div><div class="opt">A · Líquido</div><div class="opt">B · Sólido</div><div class="opt">C · Gaseoso</div><div class="opt">D · Plasma</div></div></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D7b–e</span><h4>Editor de ítems: los otros cuatro tipos</h4><p>Misma estructura (contenido, clave, puntaje, explicación) con controles propios de cada tipo.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/formulario</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px">
+      <div class="box"><h6>Verdadero o falso</h6><span class="lbl">Afirmación</span><div class="in full">El agua hierve a 50 °C al nivel del mar.</div>
+        <div class="row" style="margin-top:8px"><span class="lbl" style="margin:0">Respuesta correcta:</span><span class="chip">Verdadero</span><span class="chip on">Falso</span></div>
+        <div class="row" style="margin-top:8px"><span class="tog on"></span>Pedir justificación <span class="sp"></span><span class="muted">Puntaje 1 + 1 (justif.)</span></div>
+        <span class="lbl" style="margin-top:8px">Justificación esperada (guía para corregir)</span><div class="in full">Hierve a 100 °C.</div></div>
+      <div class="box"><h6>Unir con flechas</h6><div class="split" style="gap:8px"><div><span class="lbl">Columna A</span><div class="opt">Sólido</div><div class="opt">Líquido</div><div class="opt">Gaseoso</div></div><div><span class="lbl">Columna B (par correcto)</span><div class="opt">Hielo</div><div class="opt">Agua de la canilla</div><div class="opt">Vapor</div></div></div>
+        <div class="row"><a class="btn ghost">+ Par</a><a class="btn ghost">+ Distractor en B</a><span class="sp"></span><span class="muted">1 pt por par</span></div></div>
+      <div class="box"><h6>Completar</h6><span class="lbl">Texto (seleccioná una palabra y tocá "Convertir en hueco")</span>
+        <div class="in full" style="color:var(--ink);line-height:1.9">Cuando el agua se calienta pasa de estado <span class="blank">líquido</span> a <span class="blank">gaseoso</span>. Ese proceso se llama <span class="blank">evaporación</span>.</div>
+        <div class="row" style="margin-top:8px"><span class="lbl" style="margin:0">Respuestas aceptadas para "evaporación":</span><span class="chip">evaporación</span><span class="chip">vaporización</span><span class="chip">+</span></div>
+        <div class="row" style="margin-top:6px"><span class="tog on"></span>Mostrar banco de palabras <span class="tog" style="margin-left:12px"></span>Exigir tildes</div></div>
+      <div class="box"><h6>Tachar lo que no corresponde</h6><span class="lbl">Texto del tema</span><div class="in full area">Los mamíferos son animales vertebrados que…</div>
+        <span class="lbl" style="margin-top:8px">Frases (marcá las que NO corresponden)</span>
+        <div class="opt"><span class="check"></span>Tienen pelo en el cuerpo</div><div class="opt right"><span class="check on"></span>Ponen huevos con cáscara dura<span class="sp"></span><span class="mark-bad">Tachar</span></div><div class="opt"><span class="check"></span>Las crías toman leche</div><div class="opt right"><span class="check on"></span>Respiran por branquias<span class="sp"></span><span class="mark-bad">Tachar</span></div></div>
+    </div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D8</span><h4>Desde una foto: subir</h4><p>Subida desde la computadora o desde el celular escaneando un QR. Admite varias fotos (ejercicio en dos páginas).</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/foto</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="top"><h5>Crear desde una foto</h5></div>
+      <div class="split r">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="dropz"><div style="font-family:var(--f-display);font-size:17px;font-weight:600">Arrastrá la foto o el PDF acá</div><div style="margin-top:4px">o <u>elegí un archivo</u> · JPG, PNG, PDF hasta 15 MB</div></div>
+          <div class="row"><div class="ph" style="width:110px;height:80px">pag-34.jpg</div><div class="ph" style="width:110px;height:80px">pag-35.jpg</div><div class="sp"></div></div>
+          <div class="fgrid two"><div><span class="lbl">Materia</span><div class="in full">Ciencias Naturales ▾</div></div><div><span class="lbl">Tipo de tarea</span><div class="in full">Detectar automáticamente ▾</div></div></div>
+          <div class="row"><span class="check on"></span>Si el ejercicio no trae respuestas, intentar resolverlas (las revisás vos)</div>
+        </div>
+        <div class="box" style="text-align:center"><h6>Desde el celular</h6><div class="ph" style="width:130px;height:130px;margin:6px auto">QR</div><p class="muted" style="font-size:12px;margin:0">Escaneá y sacá la foto. Aparece acá sola.</p>
+          <h6 style="margin-top:14px;text-align:left">Consejos</h6><ul style="text-align:left;margin:0;padding-left:16px;font-size:12px;color:var(--muted)"><li>Buena luz, sin sombras</li><li>Hoja derecha y completa</li><li>Un ejercicio por tarea</li></ul></div>
+      </div>
+      <div class="row"><span class="sp"></span><a class="btn">Cancelar</a><a class="btn pri">Analizar foto</a></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D9</span><h4>Desde una foto: revisar lo detectado</h4><p>La foto queda a la izquierda y la tarea estructurada a la derecha. Los campos con baja confianza se marcan para revisar. Después sigue al paso de asignación.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/foto/revisar</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="top"><div><h5>Revisá lo que detectamos</h5><div class="crumbs">Tipo detectado: <b>Unir con flechas</b> <span class="conf" style="background:var(--ok-soft);color:var(--ok)">96 %</span> · <a class="btn ghost" style="padding:0">Cambiar tipo</a></div></div><div class="row"><a class="btn">Volver a analizar</a><a class="btn pri">Continuar a asignar</a></div></div>
+      <div class="split">
+        <div class="ph" style="min-height:330px;align-content:center;gap:8px">Foto original con zonas detectadas resaltadas<br><span style="font-family:var(--f-mono)">[1] [2] [3] [4] [5]</span><br><a class="btn" style="margin-top:8px">Ver texto extraído</a></div>
+        <div class="box" style="display:flex;flex-direction:column;gap:8px"><span class="lbl">Consigna</span><div class="in full">Uní cada animal con su forma de desplazarse.</div>
+          <table class="ui"><thead><tr><th>Columna A</th><th>Columna B</th><th>Confianza</th></tr></thead>
+          <tr><td>Pez</td><td>Nada</td><td><span class="conf" style="background:var(--ok-soft);color:var(--ok)">98 %</span></td></tr>
+          <tr><td>Águila</td><td>Vuela</td><td><span class="conf" style="background:var(--ok-soft);color:var(--ok)">97 %</span></td></tr>
+          <tr style="background:var(--warn-soft)"><td>Serp<b>i</b>ente <span class="muted">(¿Serpiente?)</span></td><td>Repta</td><td><span class="conf" style="background:var(--warn-soft);color:var(--warn)">61 %</span></td></tr>
+          <tr><td>Caballo</td><td>Galopa</td><td><span class="conf" style="background:var(--ok-soft);color:var(--ok)">94 %</span></td></tr>
+          <tr style="background:var(--bad-soft)"><td colspan="2">No encontramos la respuesta del ítem 5. <a class="btn ghost" style="padding:0">Completar</a></td><td><span class="conf" style="background:var(--bad-soft);color:var(--bad)">—</span></td></tr></table>
+          <div class="fgrid two"><div><span class="lbl">Puntaje por par</span><div class="in full">2</div></div><div><span class="lbl">Explicación general</span><div class="in full">Cada animal se desplaza según…</div></div></div></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D10</span><h4>Desde un texto: fuente y parámetros</h4><p>El texto se escribe, se dicta o se extrae de una foto. Se elige tipo, cantidad de preguntas, elementos por pregunta, nivel y lenguaje.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/texto</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="top"><h5>Crear desde un texto</h5></div>
+      <div class="split r">
+        <div class="box" style="display:flex;flex-direction:column;gap:8px">
+          <div class="tabs"><span class="on">Escribir o pegar</span><span>Dictar</span><span>Desde foto</span></div>
+          <div class="in full" style="min-height:180px;color:var(--ink)">El 25 de mayo de 1810 se formó en Buenos Aires la Primera Junta de gobierno, presidida por Cornelio Saavedra. Este hecho, conocido como la Revolución de Mayo, marcó el inicio del proceso de independencia…</div>
+          <div class="row muted" style="font-size:12px"><span>612 caracteres</span><span class="sp"></span><span class="pill p-mute">Vista "Dictar": botón grande de micrófono, transcripción en vivo editable</span></div>
+        </div>
+        <div class="box" style="display:flex;flex-direction:column;gap:10px"><h6>¿Qué tarea querés generar?</h6>
+          <div><span class="lbl">Materia</span><div class="in full">Ciencias Sociales ▾</div></div>
+          <div><span class="lbl">Tipo</span><div class="row"><span class="chip on">Múltiple choice</span><span class="chip">V o F</span><span class="chip">Unir</span><span class="chip">Completar</span><span class="chip">Tachar</span></div></div>
+          <div class="fgrid two"><div><span class="lbl">Cantidad de preguntas</span><div class="in full">5</div></div><div><span class="lbl">Opciones por pregunta</span><div class="in full">3</div></div></div>
+          <div class="fgrid two"><div><span class="lbl">Correctas por pregunta</span><div class="in full">1</div></div><div><span class="lbl">Nivel</span><div class="in full">4° grado ▾</div></div></div>
+          <div class="row"><span class="tog on"></span>Lenguaje simple y oraciones cortas</div>
+          <div class="row"><span class="tog on"></span>Incluir explicación en cada respuesta</div>
+          <a class="btn pri" style="justify-content:center">Generar tarea</a></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D11</span><h4>Desde un texto: revisar la generación</h4><p>Borrador generado, editable ítem por ítem. Se puede regenerar un ítem, hacerlo más fácil o más difícil, o regenerar todo. Luego continúa al paso de asignación.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/texto/revisar</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="top"><div><h5>La Revolución de Mayo</h5><div class="crumbs">Generada por IA · revisá antes de publicar</div></div><div class="row"><a class="btn">Regenerar todo</a><a class="btn pri">Continuar a asignar</a></div></div>
+      <div class="split r">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="box"><div class="row"><b>Pregunta 1</b><span class="sp"></span><a class="btn ghost">Más fácil</a><a class="btn ghost">Regenerar</a><a class="btn ghost">Editar</a></div>
+            <div style="margin:6px 0 8px">¿Quién presidió la Primera Junta?</div>
+            <div class="opt right"><span class="radio on"></span>Cornelio Saavedra<span class="sp"></span><span class="mark-ok">Correcta</span></div><div class="opt"><span class="radio"></span>Manuel Belgrano</div><div class="opt"><span class="radio"></span>José de San Martín</div>
+            <div class="muted" style="font-size:12px;margin-top:6px">Explicación: El texto dice que la Junta fue "presidida por Cornelio Saavedra".</div></div>
+          <div class="box"><div class="row"><b>Pregunta 2</b><span class="pill p-done">Revisar</span><span class="sp"></span><a class="btn ghost">Regenerar</a><a class="btn ghost">Editar</a></div>
+            <div style="margin:6px 0 8px">¿En qué año ocurrió la Revolución de Mayo?</div>
+            <div class="opt right"><span class="radio on"></span>1810</div><div class="opt"><span class="radio"></span>1816</div><div class="opt"><span class="radio"></span>1806</div>
+            <div class="muted" style="font-size:12px;margin-top:6px">Aviso: dos distractores son fechas de otros hechos históricos; puede confundir. ¿Lo dejás?</div></div>
+          <div class="box sunk row"><b>Pregunta 3</b> <span class="muted">¿Dónde se formó la Primera Junta?</span><span class="sp"></span><a class="btn ghost">Ver</a></div>
+        </div>
+        <div class="box sunk"><h6>Texto fuente</h6><div style="font-size:12.5px">El 25 de mayo de 1810 se formó en Buenos Aires la Primera Junta de gobierno, presidida por <mark style="background:var(--sun-soft);color:inherit">Cornelio Saavedra</mark>…</div><p class="muted" style="font-size:11.5px;margin-top:10px">Al pasar el mouse por una pregunta se resalta de qué parte del texto salió.</p></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D12</span><h4>Bandeja de corrección</h4><p>Entregas en estado Completada, con la nota sugerida por la precorrección y el indicador de fuera de término. Nada llega al alumno hasta que el docente aprueba; las 100 % objetivas se pueden aprobar en lote.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/correccion</span></div>
+    <div class="app"><div class="side" data-side="docente:Corrección"></div>
+    <div class="mn">
+      <div class="top"><h5>Para corregir (6)</h5><div class="row"><span class="chip on">Todas</span><span class="chip">Necesitan revisión (2)</span><span class="chip">Solo aprobar (4)</span><span class="chip">Fuera de término (2)</span></div></div>
+      <table class="ui"><thead><tr><th><span class="check"></span></th><th>Alumno</th><th>Tarea</th><th>Tipo</th><th>Entregada</th><th>Nota sugerida</th><th>Necesita</th><th></th></tr></thead><tbody>
+      <tr><td><span class="check on"></span></td><td>Tomás R.</td><td>Estados del agua</td><td>Múltiple choice</td><td>18/10 19:02</td><td><span class="pill p-ok">8 / 10</span></td><td><span class="muted">Confirmar</span></td><td><a class="btn">Abrir</a></td></tr>
+      <tr><td><span class="check"></span></td><td>Lucía P.</td><td>El ciclo del agua</td><td>V o F</td><td>20/10 21:40 <span class="pill late">Fuera de término · 2 días</span></td><td><span class="pill p-mute">5 / 10 + justif.</span></td><td><b>3 justificaciones</b></td><td><a class="btn pri">Corregir</a></td></tr>
+      <tr><td><span class="check on"></span></td><td>Valentina G.</td><td>Fracciones</td><td>Unir</td><td>17/10 18:15</td><td><span class="pill p-ok">10 / 10</span></td><td><span class="muted">Confirmar</span></td><td><a class="btn">Abrir</a></td></tr>
+      <tr><td><span class="check"></span></td><td>Joaquín B.</td><td>Sumas con fracciones</td><td>Completar</td><td>17/10 12:30 <span class="pill late">Fuera de término · 1 día</span></td><td><span class="pill p-bad">5 / 10</span></td><td><b>2 respuestas dudosas</b></td><td><a class="btn pri">Corregir</a></td></tr>
+      </tbody></table>
+      <div class="row"><span class="muted">2 seleccionadas</span><a class="btn pri">Aprobar corrección de las seleccionadas</a><span class="muted" style="font-size:12px">Pasan a Corregida y el alumno recibe la nota.</span></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D13</span><h4>Corregir entrega</h4><p>Respuesta del alumno frente a la clave, puntaje por ítem editable y comentario. La nota final es sugerida y el docente puede cambiarla. Si la entrega fue fuera de término, puede desaprobar aunque la nota sea 7 o más. Si el resultado es Desaprobada, elige si queda así o si el alumno debe rehacerla. Al aprobar la corrección, la tarea pasa de Completada a Corregida.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/correccion/lucia-ciclo-agua</span></div>
+    <div class="app"><div class="side" data-side="docente:Corrección"></div>
+    <div class="mn">
+      <div class="top"><div><div class="crumbs">Corrección › Lucía Pereyra · intento 1</div><h5>El ciclo del agua · Verdadero o falso</h5><span class="pill late">Fuera de término · entregada 20/10, vencía 18/10</span></div><div class="row"><a class="btn">‹ Anterior</a><a class="btn">Siguiente ›</a></div></div>
+      <div class="split r">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="box"><div class="row"><b>1.</b> El agua de los ríos llega al mar. <span class="sp"></span><span class="mark-ok">✓ V</span><span class="muted">2 / 2</span></div></div>
+          <div class="box" style="border-color:var(--accent)"><div class="row"><b>2.</b> Las nubes están formadas por humo. <span class="sp"></span><span class="mark-ok">✓ F</span></div>
+            <div style="margin-top:8px"><span class="lbl">Justificación de Lucía (dictada)</span><div class="box sunk">"Porque las nubes son agua que subió cuando hace calor."</div></div>
+            <div class="row" style="margin-top:6px;font-size:12px"><span class="muted">Esperada: Están formadas por gotitas de agua condensada.</span><span class="sp"></span><span class="pill p-new">IA sugiere 1 / 1</span></div>
+            <div class="row" style="margin-top:8px"><span class="lbl" style="margin:0">Puntaje</span><div class="in" style="width:60px">2</div><span class="muted">/ 2</span><span class="sp"></span><div class="in" style="flex:1">Comentario del ítem: ¡Muy bien explicado!</div></div></div>
+          <div class="box"><div class="row"><b>3.</b> El sol no influye en el ciclo del agua. <span class="sp"></span><span class="mark-bad">✗ marcó V</span><span class="muted">0 / 2</span></div></div>
+          <div class="box sunk row"><b>4.</b> <span class="muted">El vapor de agua es invisible.</span><span class="sp"></span><span class="mark-ok">✓ V</span><span class="muted">2 / 2</span></div>
+        </div>
+        <div class="box" style="display:flex;flex-direction:column;gap:10px;align-self:start"><h6>Resultado</h6>
+          <span class="lbl">Nota final</span>
+          <div class="row"><div class="in" style="font-family:var(--f-display);font-size:26px;color:var(--ink);width:84px;padding:2px 10px">8</div><span class="muted">/ 10</span><span class="sp"></span><a class="btn ghost" style="font-size:12px">Usar la sugerida</a></div>
+          <div class="muted" style="font-size:12px">Sugerida: 8 (6 de 8 puntos = 7,5, redondeado). Podés cambiarla. Aprueba con 7.</div>
+          <span class="lbl">Resultado</span>
+          <div class="opt right"><span class="radio on"></span>Según la nota: <b>Aprobada</b></div>
+          <div class="opt"><span class="radio"></span>Desaprobar por entrega fuera de término</div>
+          <div class="in full" style="font-size:12px">Motivo (lo ve el alumno)…</div>
+          <span class="lbl">Comentario general</span><div class="in full area">Buen trabajo con la evaporación. Repasá el papel del sol.</div>
+          <div class="box sunk" style="font-size:12px;display:flex;flex-direction:column;gap:6px;opacity:.6"><b>Si queda desaprobada</b><div class="row"><span class="radio on"></span>Queda desaprobada</div><div class="row"><span class="radio"></span>Debe rehacerla (solo ítems incorrectos) · nueva fecha <span class="in" style="padding:2px 6px">27/10</span></div><span class="muted">Se habilita cuando el resultado es Desaprobada.</span></div>
+          <a class="btn pri" style="justify-content:center">Aprobar corrección</a><a class="btn" style="justify-content:center">Imprimir con corrección</a></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D14</span><h4>Vista de impresión</h4><p>Formato A4 para la carpeta: encabezado con datos, consigna, ítems con espacio para responder. Opciones: con o sin corrección, tamaño de letra, QR. Disponible para todos los roles.</p></figcaption>
+  <div class="scroll"><div class="frame" style="width:1000px;background:var(--sunk)"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/tareas/estados-del-agua/imprimir</span></div>
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:16px;padding:16px">
+      <div class="box" style="display:flex;flex-direction:column;gap:8px;align-self:start"><h6>Opciones</h6><div class="row"><span class="radio on"></span>Sin respuestas</div><div class="row"><span class="radio"></span>Con corrección</div><div class="row"><span class="check on"></span>Letra grande</div><div class="row"><span class="check on"></span>Código QR</div><div class="row"><span class="check"></span>Espacio para nombre</div><a class="btn pri" style="justify-content:center">Imprimir</a><a class="btn" style="justify-content:center">Descargar PDF</a></div>
+      <div class="paper">
+        <div style="display:flex;justify-content:space-between;border-bottom:2px solid #1b1b1b;padding-bottom:8px"><div><b style="font-family:var(--f-display);font-size:18px">Estados del agua</b><div>Ciencias Naturales · Prof. Marcela López</div></div><div style="text-align:right">Tomás Ramírez · 4° B<br>Entrega: 24/10/2026</div></div>
+        <p style="margin:12px 0"><b>Consigna:</b> Leé cada pregunta y marcá con una cruz la respuesta correcta.</p>
+        <h6>1. ¿En qué estado está el agua cuando forma un cubito de hielo?</h6><div>☐ Líquido &nbsp;&nbsp; ☐ Sólido &nbsp;&nbsp; ☐ Gaseoso &nbsp;&nbsp; ☐ Plasma</div>
+        <h6>2. Cuando el agua hierve, se convierte en…</h6><div>☐ Hielo &nbsp;&nbsp; ☐ Vapor &nbsp;&nbsp; ☐ Nieve</div>
+        <h6>3. ¿Por qué se empaña el espejo del baño? Explicá con tus palabras.</h6><div class="ln"></div><div class="ln"></div>
+        <div style="display:flex;justify-content:space-between;align-items:end;margin-top:24px;font-size:11px;color:#555"><span>Fertelligence · Hoja 1 de 1</span><span style="width:56px;height:56px;border:1px solid #999;display:grid;place-items:center">QR</span></div>
+      </div>
+    </div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D15</span><h4>Docente en el celular</h4><p>Las dos cosas que más se hacen fuera del escritorio: sacarle una foto a un ejercicio para crear la tarea, y aprobar correcciones. El resto de las pantallas del docente se reacomoda en una columna.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>8:15</span><span>4G 90 %</span></div>
+      <div class="stu-top"><a class="btn ghost" style="padding-left:0">✕</a><div style="font-family:var(--f-display);font-size:17px;font-weight:600">Crear desde una foto</div></div>
+      <div class="stu-body">
+        <div class="cam">Encuadrá el ejercicio<br>dentro del recuadro</div>
+        <div class="row"><div class="ph" style="width:56px;height:56px;padding:2px;font-size:10px">pág. 34</div><span class="muted" style="font-size:12px">1 foto · podés agregar otra página</span></div>
+        <div class="shutter"></div>
+        <a class="btn pri lg block">Analizar foto</a>
+      </div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>21:30</span><span>WiFi 58 %</span></div>
+      <div class="stu-top"><a class="btn ghost" style="padding-left:0">‹</a><div><div style="font-family:var(--f-display);font-size:16px;font-weight:600">Lucía P. · El ciclo del agua</div><div class="muted" style="font-size:11px">2 de 6 para corregir</div></div></div>
+      <div class="stu-body">
+        <span class="pill late" style="align-self:start">Fuera de término · 2 días</span>
+        <div class="box row" style="font-size:13.5px"><b>1.</b> Los ríos llegan al mar <span class="sp"></span><span class="mark-ok">✓</span> 2/2</div>
+        <div class="box" style="font-size:13.5px;border-color:var(--accent)"><div class="row"><b>2.</b> Nubes de humo <span class="sp"></span><span class="mark-ok">✓ F</span></div><div class="box sunk" style="margin-top:6px">"Son agua que se evaporó…"</div><div class="row" style="margin-top:6px"><span class="pill p-new">IA sugiere 2/2</span><span class="sp"></span><div class="in" style="width:48px">2</div>/2</div></div>
+        <div class="box row" style="font-size:13.5px"><b>3.</b> El sol no influye <span class="sp"></span><span class="mark-bad">✗</span> 0/2</div>
+        <div class="box" style="display:flex;flex-direction:column;gap:6px"><div class="row"><div class="in" style="font-family:var(--f-display);font-size:20px;color:var(--ink);width:64px;padding:1px 8px">8</div><span class="muted">/ 10 sugerida</span><span class="sp"></span><span class="pill p-ok">Aprobada</span></div>
+          <div class="row" style="font-size:13px"><span class="tog"></span>Desaprobar por atraso</div><div class="row" style="font-size:13px;opacity:.6">Si desaprueba: <div class="in" style="padding:2px 6px">Queda desaprobada ▾</div></div></div>
+        <a class="btn pri lg block">Aprobar corrección</a>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">D16</span><h4>Importar desde Google Classroom</h4><p>Cuarto método de creación. El docente navega sus cursos de Classroom y elige un material. Los cuestionarios de Google Forms se convierten directo en ítems; documentos, PDF e imágenes pasan por OCR o por la generación desde texto. Después sigue al paso de revisión y asignación.</p></figcaption>
+  <div class="scroll"><div class="frame"><div class="bar"><i></i><i></i><i></i><span class="url">app.fertelligence.com/docente/tareas/nueva/classroom</span></div>
+    <div class="app"><div class="side" data-side="docente:Nueva tarea"></div>
+    <div class="mn">
+      <div class="top"><div><h5>Importar desde Google Classroom</h5><div class="crumbs">Conectado como mlopez@escuela.edu.ar · solo lectura · <a class="btn ghost" style="padding:0">Desconectar</a></div></div></div>
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr;gap:14px">
+        <div class="box"><h6>Cursos</h6><div style="display:grid;gap:4px"><div class="opt right"><b>4° B Naturales</b></div><div class="opt">4° B Matemática</div><div class="opt">5° A Naturales</div></div></div>
+        <div class="box"><h6>Materiales de 4° B Naturales</h6><table class="ui">
+          <tr style="background:var(--accent-soft)"><td><span class="pill p-new">Forms</span></td><td><b>Cuestionario: estados del agua</b><div class="muted">8 preguntas</div></td></tr>
+          <tr><td><span class="pill p-mute">PDF</span></td><td>Ficha: ciclo del agua<div class="muted">2 páginas</div></td></tr>
+          <tr><td><span class="pill p-mute">Doc</span></td><td>Resumen: mezclas y soluciones</td></tr>
+          <tr><td><span class="pill p-mute">Imagen</span></td><td>Foto pizarrón 14/10</td></tr></table></div>
+        <div class="box" style="display:flex;flex-direction:column;gap:10px"><h6>Cómo importarlo</h6>
+          <div class="opt right"><span class="radio on"></span><div><b>Importar las preguntas tal cual</b><div class="muted" style="font-size:12px">Se detectan 6 de opción múltiple y 2 de respuesta corta. Las de respuesta corta no tienen un tipo equivalente y se omiten.</div></div></div>
+          <div class="opt"><span class="radio"></span><div><b>Usarlo como texto fuente</b><div class="muted" style="font-size:12px">Elegís tipo y cantidad, y la IA genera la tarea (como D10).</div></div></div>
+          <div><span class="lbl">Tipo de tarea</span><div class="in full">Múltiple choice ▾</div></div>
+          <a class="btn pri" style="justify-content:center">Importar y revisar</a></div>
+      </div>
+    </div></div>
+  </div></div></figure>
+
+  <!-- ===== ALUMNO ===== -->
+  <div class="role-head" id="m-alu"><h3>Alumno</h3><span class="muted">En el celular · una cosa por vez, siempre se sabe qué sigue</span></div>
+
+  <figure class="mock"><figcaption><span class="code">S1 · S2</span><h4>Hoy y Mis tareas</h4><p>"Hoy" tiene una sola acción principal: la próxima tarea. "Mis tareas" muestra todos los estados: Nueva, Para rehacer, Vencida (todavía se puede entregar), Completada y Corregida con Aprobada o Desaprobada. Navegación inferior al alcance del pulgar.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>9:41</span><span>4G 82 %</span></div>
+      <div class="stu-top"><div class="logo">Fert<span>elligence</span></div><span class="sp"></span><span class="av">TR</span></div>
+      <div class="stu-body">
+        <div><div style="font-family:var(--f-display);font-size:22px;font-weight:600">Hola, Tomás</div><div class="muted">Tenés 2 tareas para hoy.</div></div>
+        <div style="background:var(--paper);border:2px solid var(--accent);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px">
+          <div class="row"><span class="pill p-new">Nueva</span><span class="pill" style="background:var(--ok-soft);color:var(--ok)">Cs. Naturales</span></div>
+          <div style="font-family:var(--f-display);font-size:19px;font-weight:600">Estados del agua</div>
+          <div class="muted" style="font-size:13px">5 preguntas · unos 8 min · vence el viernes</div>
+          <a class="btn pri lg block">Empezar</a></div>
+        <div style="font-family:var(--f-display);font-weight:600">Después</div>
+        <div class="taskcard"><span class="stripe"></span><div><h6>Fracciones equivalentes</h6><div class="meta">Matemática · vence el miércoles</div></div></div>
+        <div class="taskcard corr"><span class="stripe"></span><div><h6>Mezclas y soluciones</h6><div class="meta">Corregida · 8 de 10 · Aprobada</div></div></div>
+        <div class="box" style="background:var(--sun-soft);border-color:var(--sun);font-size:14px"><b>4 días seguidos</b> con tareas al día.</div>
+      </div>
+      <div class="tabbar"><span class="on">Hoy</span><span>Tareas</span><span>Progreso</span></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>9:41</span><span>4G 82 %</span></div>
+      <div class="stu-top"><div style="font-family:var(--f-display);font-size:18px;font-weight:600">Mis tareas</div><span class="sp"></span><div class="in" style="font-size:12px">Materia ▾</div></div>
+      <div class="stu-body">
+        <div class="row nowrap"><span class="chip on">Todas</span><span class="chip">Nuevas (3)</span><span class="chip">Completadas</span><span class="chip">Corregidas</span></div>
+        <div class="taskcard"><span class="stripe"></span><div><h6>Estados del agua</h6><div class="meta">Cs. Naturales · vence vie 24/10</div><div class="row" style="margin-top:6px"><span class="pill p-new">Nueva</span></div></div></div>
+        <div class="taskcard" style="border-color:var(--sun)"><span class="stripe" style="background:var(--sun)"></span><div><h6>Partes de la planta</h6><div class="meta">Rehacer antes del lun 27/10</div><div class="row" style="margin-top:6px"><span class="pill p-new">Nueva</span><span class="pill" style="background:var(--sun-soft);color:var(--warn)">Para rehacer</span></div></div></div>
+        <div class="taskcard bad"><span class="stripe"></span><div><h6>Animales vertebrados</h6><div class="meta">Venció el 12/10 · todavía podés entregarla</div><div class="row" style="margin-top:6px"><span class="pill late">Vencida</span></div></div></div>
+        <div class="taskcard done"><span class="stripe"></span><div><h6>El ciclo del agua</h6><div class="meta">Entregada · esperando corrección</div><div class="row" style="margin-top:6px"><span class="pill p-done">Completada</span></div></div></div>
+        <div class="taskcard corr"><span class="stripe"></span><div><h6>Mezclas y soluciones</h6><div class="meta">8 de 10</div><div class="row" style="margin-top:6px"><span class="pill p-corr">Corregida</span><span class="pill p-ok">Aprobada</span></div></div></div>
+        <div class="taskcard bad"><span class="stripe"></span><div><h6>Sistema solar</h6><div class="meta">6 de 10</div><div class="row" style="margin-top:6px"><span class="pill p-corr">Corregida</span><span class="pill p-bad">Desaprobada</span></div></div></div>
+      </div>
+      <div class="tabbar"><span>Hoy</span><span class="on">Tareas</span><span>Progreso</span></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">S3 · S4</span><h4>Antes de empezar y múltiple choice</h4><p>La preparación dice qué hay que hacer y cuánto tarda. Al resolver se entra en modo foco: sin navegación, una pregunta por pantalla, opciones grandes, botón Escuchar y progreso por segmentos. La aclaración "elegí una" o "podés elegir varias" siempre visible.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>9:42</span><span>4G 82 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <a class="btn ghost" style="align-self:start;padding-left:0">‹ Volver</a>
+        <span class="pill" style="background:var(--ok-soft);color:var(--ok);align-self:start">Cs. Naturales · Prof. Marcela López</span>
+        <div style="font-family:var(--f-display);font-size:26px;font-weight:700">Estados del agua</div>
+        <div class="q" style="font-size:18px">Leé cada pregunta y elegí la respuesta correcta.</div>
+        <span class="listen" style="align-self:start">Escuchar consigna</span>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div class="box" style="text-align:center;padding:10px 6px"><div style="font-family:var(--f-display);font-size:20px;font-weight:600">5</div><div class="muted" style="font-size:12px">preguntas</div></div>
+          <div class="box" style="text-align:center;padding:10px 6px"><div style="font-family:var(--f-display);font-size:20px;font-weight:600">~8'</div><div class="muted" style="font-size:12px">minutos</div></div>
+          <div class="box" style="text-align:center;padding:10px 6px"><div style="font-family:var(--f-display);font-size:20px;font-weight:600">vie 24</div><div class="muted" style="font-size:12px">entrega</div></div>
+        </div>
+        <div class="muted" style="font-size:13px">Se guarda solo. Podés parar y seguir después.</div>
+        <div class="focus-foot" style="flex-direction:column;gap:8px;align-items:stretch"><a class="btn pri lg block">Empezar</a><a class="btn block">Imprimir</a></div>
+      </div></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>9:43</span><span>4G 82 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <div class="focus-head"><a class="btn ghost" style="padding:4px">✕</a><div class="dots"><i class="d"></i><i class="c"></i><i></i><i></i><i></i></div><span class="sp"></span><span>2 de 5</span></div>
+        <div class="q">Cuando el agua hierve en una olla, ¿en qué se convierte?</div>
+        <div class="ph" style="height:100px">Imagen de la consigna: olla con agua hirviendo</div>
+        <div class="hint"><span class="listen">Escuchar</span> Elegí <b>una</b>.</div>
+        <div class="bigopt"><span class="k">A</span>En hielo</div>
+        <div class="bigopt sel"><span class="k">B</span>En vapor</div>
+        <div class="bigopt"><span class="k">C</span>En arena</div>
+        <div class="muted" style="font-size:12px;text-align:center">Guardado · pausa sugerida en 6 min</div>
+        <div class="focus-foot"><a class="btn lg">‹</a><a class="btn pri lg" style="flex:1;justify-content:center;margin-left:8px">Siguiente</a></div>
+      </div></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">S5 · S6</span><h4>Verdadero o falso y unir con flechas</h4><p>V o F con dos botones enormes y justificación escrita o dictada. En unir, se toca un elemento de la izquierda y después uno de la derecha; tocar una línea la borra. En celular las columnas son angostas, por eso los textos deben ser cortos (el editor del docente avisa).</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>9:47</span><span>4G 81 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <div class="focus-head"><a class="btn ghost" style="padding:4px">✕</a><div class="dots"><i class="d"></i><i class="d"></i><i class="c"></i><i></i></div><span class="sp"></span><span>3 de 4</span></div>
+        <div class="q">Las nubes están formadas por humo.</div>
+        <div class="hint"><span class="listen">Escuchar</span> ¿Verdadero o falso?</div>
+        <div class="tf"><div>Verdadero</div><div class="sel">Falso</div></div>
+        <div><div style="font-weight:700;margin-bottom:6px">¿Por qué?</div>
+          <div style="background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:12px;min-height:96px;font-size:15px">Porque las nubes son agua que se evaporó y se juntó en el cielo.</div>
+          <div class="row" style="margin-top:8px"><a class="btn">Dictar</a><span class="muted" style="font-size:12px">o escribila</span></div></div>
+        <div class="focus-foot"><a class="btn lg">‹</a><a class="btn pri lg" style="flex:1;justify-content:center;margin-left:8px">Siguiente</a></div>
+      </div></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>9:51</span><span>4G 81 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <div class="focus-head"><a class="btn ghost" style="padding:4px">✕</a><div class="dots"><i class="c"></i></div><span class="sp"></span><span>2 de 4 unidos</span></div>
+        <div class="hint"><span class="listen">Escuchar</span> Uní cada animal con cómo se mueve.</div>
+        <svg class="match" viewBox="0 0 320 300" width="100%" role="img" aria-label="Ejercicio de unir con flechas">
+          <rect class="node" x="2" y="4" width="118" height="56" rx="12"/><text x="16" y="38">Pez</text><circle class="dot" cx="120" cy="32" r="6"/>
+          <rect class="node" x="2" y="80" width="118" height="56" rx="12"/><text x="16" y="114">Águila</text><circle class="dot" cx="120" cy="108" r="6"/>
+          <rect class="node sel" x="2" y="156" width="118" height="56" rx="12"/><text x="16" y="190">Serpiente</text><circle class="dot" cx="120" cy="184" r="6"/>
+          <rect class="node" x="2" y="232" width="118" height="56" rx="12"/><text x="16" y="266">Caballo</text><circle class="dot0" cx="120" cy="260" r="6"/>
+          <rect class="node" x="200" y="4" width="118" height="56" rx="12"/><text x="216" y="38">Vuela</text><circle class="dot" cx="200" cy="32" r="6"/>
+          <rect class="node" x="200" y="80" width="118" height="56" rx="12"/><text x="216" y="114">Nada</text><circle class="dot" cx="200" cy="108" r="6"/>
+          <rect class="node" x="200" y="156" width="118" height="56" rx="12"/><text x="216" y="190">Galopa</text><circle class="dot0" cx="200" cy="184" r="6"/>
+          <rect class="node" x="200" y="232" width="118" height="56" rx="12"/><text x="216" y="266">Repta</text><circle class="dot0" cx="200" cy="260" r="6"/>
+          <path class="ln" d="M120 32 C160 32 160 108 200 108"/>
+          <path class="ln" d="M120 108 C160 108 160 32 200 32"/>
+          <path class="ln2" d="M120 184 C150 184 160 230 190 250"/>
+        </svg>
+        <div class="muted" style="font-size:12px;text-align:center">Serpiente seleccionada: tocá cómo se mueve.</div>
+        <div class="focus-foot"><a class="btn lg">Borrar</a><a class="btn pri lg" style="flex:1;justify-content:center;margin-left:8px">Siguiente</a></div>
+      </div></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">S7 · S8</span><h4>Completar y tachar lo que no corresponde</h4><p>Completar con huecos grandes y banco de palabras opcional (si no está, se escribe). En tachar, el texto del tema se puede plegar para dejar más lugar a las frases; tocar una frase la tacha y tocarla de nuevo la recupera.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>10:02</span><span>4G 79 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <div class="focus-head"><a class="btn ghost" style="padding:4px">✕</a><div class="dots"><i class="d"></i><i class="c"></i><i></i></div><span class="sp"></span><span>2 de 3</span></div>
+        <div class="hint"><span class="listen">Escuchar</span> Completá lo que falta.</div>
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;font-size:18px;line-height:2.1">Cuando el agua se calienta pasa de estado <span class="blank">líquido</span> a <span class="blank" style="background:var(--accent-soft)">&nbsp;</span>. Ese proceso se llama <span class="blank">&nbsp;</span>.</div>
+        <div><div style="font-weight:700;margin-bottom:8px">Palabras para usar</div><div class="row"><span class="chip" style="font-size:15px;padding:7px 14px;text-decoration:line-through;color:var(--muted)">líquido</span><span class="chip on" style="font-size:15px;padding:7px 14px">gaseoso</span><span class="chip" style="font-size:15px;padding:7px 14px">evaporación</span><span class="chip" style="font-size:15px;padding:7px 14px">sólido</span></div></div>
+        <div class="focus-foot"><a class="btn lg">‹</a><a class="btn pri lg" style="flex:1;justify-content:center;margin-left:8px">Siguiente</a></div>
+      </div></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>10:10</span><span>4G 78 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <div class="focus-head"><a class="btn ghost" style="padding:4px">✕</a><div class="dots"><i class="c"></i></div><span class="sp"></span><span>Los mamíferos</span></div>
+        <div class="box" style="font-size:14px;border-radius:12px"><div class="row"><b>Texto</b><span class="sp"></span><span class="listen">Escuchar</span><a class="btn ghost" style="padding:2px 4px">Ocultar</a></div><p style="margin:6px 0 0">Los mamíferos son vertebrados. Tienen pelo y las crías se alimentan con leche. Respiran por pulmones.</p></div>
+        <div class="hint">Tachá las frases que <b>no</b> corresponden.</div>
+        <div class="strike"><span class="xbox"></span><span>Tienen pelo en el cuerpo</span></div>
+        <div class="strike x"><span class="xbox">✕</span><span>Ponen huevos con cáscara dura</span></div>
+        <div class="strike"><span class="xbox"></span><span>Las crías toman leche</span></div>
+        <div class="strike x"><span class="xbox">✕</span><span>Respiran por branquias</span></div>
+        <div class="focus-foot"><a class="btn lg">‹</a><a class="btn pri lg" style="flex:1;justify-content:center;margin-left:8px">Revisar</a></div>
+      </div></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">S9 · S10</span><h4>Revisar y entregar · Entregada</h4><p>Resumen con lo que falta marcado. Si la tarea ya venció, se avisa que la entrega va a quedar fuera de término (la tarea se puede entregar igual). Al entregar, confirmación breve: la nota llega cuando el docente aprueba la corrección.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>10:20</span><span>4G 77 %</span></div>
+      <div class="stu-body"><div class="focus">
+        <div style="font-family:var(--f-display);font-size:22px;font-weight:600">Revisá antes de entregar</div>
+        <div class="box late" style="font-size:13.5px;border-radius:12px">Esta tarea venció el viernes 24/10. Podés entregarla igual: va a quedar como <b>fuera de término</b>.</div>
+        <div class="muted">Respondiste 4 de 5.</div>
+        <div class="taskcard corr"><span class="stripe"></span><div><h6>1. Estado del cubito de hielo</h6><div class="meta">Sólido · <u>Cambiar</u></div></div></div>
+        <div class="taskcard corr"><span class="stripe"></span><div><h6>2. Cuando el agua hierve…</h6><div class="meta">En vapor · <u>Cambiar</u></div></div></div>
+        <div class="taskcard" style="border-color:var(--sun);background:var(--sun-soft)"><span class="stripe" style="background:var(--sun)"></span><div><h6>3. ¿Por qué se empaña el espejo?</h6><div class="meta"><b>Falta responder</b> · <u>Ir</u></div></div></div>
+        <div class="taskcard corr"><span class="stripe"></span><div><h6>4. El agua se congela a…</h6><div class="meta">0 °C · <u>Cambiar</u></div></div></div>
+        <div class="focus-foot" style="flex-direction:column;gap:8px;align-items:stretch"><a class="btn pri lg block">Entregar</a><a class="btn block">Guardar y seguir después</a></div>
+      </div></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>10:22</span><span>4G 77 %</span></div>
+      <div class="stu-body"><div class="focus" style="text-align:center;align-items:center;justify-content:center">
+        <div style="width:96px;height:96px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;font-family:var(--f-display);font-size:40px;color:var(--ok)">✓</div>
+        <div style="font-family:var(--f-display);font-size:24px;font-weight:700">Tarea entregada</div>
+        <div class="muted" style="font-size:15px;max-width:28ch">La Prof. Marcela López la va a corregir. Te avisamos cuando tengas la nota.</div>
+        <div class="box" style="background:var(--sun-soft);border-color:var(--sun);font-size:14px">Racha: <b>5 días</b></div>
+        <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:12px"><a class="btn pri lg block">Siguiente tarea</a><a class="btn block">Ver mis tareas</a></div>
+      </div></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">S11 · S12</span><h4>Resultado corregido y Para rehacer</h4><p>Nota de 0 a 10, Aprobada (7 o más) o Desaprobada, comentario del docente y cada ítem con la respuesta correcta y la explicación. Si el docente desaprobó por entrega fuera de término, se muestra el motivo. Si pidió rehacerla, aparece la nueva fecha y el botón para empezar el nuevo intento.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>18:05</span><span>WiFi 64 %</span></div>
+      <div class="stu-top"><a class="btn ghost" style="padding-left:0">‹ Mis tareas</a><span class="sp"></span><a class="btn">Imprimir</a></div>
+      <div class="stu-body">
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div class="row"><div style="font-family:var(--f-display);font-size:38px;font-weight:700;line-height:1">8<span class="muted" style="font-size:18px"> / 10</span></div><span class="sp"></span><span class="pill p-ok">Aprobada</span></div>
+          <div style="font-family:var(--f-display);font-size:17px;font-weight:600">El ciclo del agua</div>
+          <div class="row" style="align-items:flex-start"><span class="av">ML</span><div class="box sunk" style="flex:1;font-size:14px">Buen trabajo con la evaporación. Repasá el papel del sol.</div></div></div>
+        <div class="box" style="border-left:6px solid var(--ok);font-size:14px"><div class="row"><b>2. Las nubes están formadas por humo.</b></div><div class="mark-ok">Correcto: Falso</div><div style="margin-top:4px">Las nubes son gotitas de agua condensada.</div></div>
+        <div class="box" style="border-left:6px solid var(--sun);font-size:14px"><div class="row"><b>3. El sol no influye en el ciclo del agua.</b></div><div class="muted">Respondiste Verdadero. Era <b>Falso</b>.</div><div style="margin-top:4px">El sol calienta el agua y la hace evaporar. Sin sol no hay ciclo del agua.</div><span class="listen" style="margin-top:8px">Escuchar explicación</span></div>
+      </div>
+      <div class="tabbar"><span>Hoy</span><span class="on">Tareas</span><span>Progreso</span></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>18:07</span><span>WiFi 64 %</span></div>
+      <div class="stu-top"><a class="btn ghost" style="padding-left:0">‹ Mis tareas</a></div>
+      <div class="stu-body">
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div class="row"><div style="font-family:var(--f-display);font-size:38px;font-weight:700;line-height:1">4<span class="muted" style="font-size:18px"> / 10</span></div><span class="sp"></span><span class="pill p-bad">Desaprobada</span></div>
+          <div style="font-family:var(--f-display);font-size:17px;font-weight:600">Partes de la planta · intento 1</div>
+          <div class="row" style="align-items:flex-start"><span class="av">ML</span><div class="box sunk" style="flex:1;font-size:14px">Mirá de nuevo el video de la raíz y el tallo, y volvé a intentarlo.</div></div></div>
+        <div class="box" style="background:var(--sun-soft);border-color:var(--sun);display:flex;flex-direction:column;gap:8px">
+          <b style="font-family:var(--f-display)">Tu docente te pidió rehacerla</b>
+          <div style="font-size:14px">Nueva entrega: <b>lunes 27/10</b>. Solo tenés que rehacer las 3 preguntas que estuvieron mal. La nota que vale es la de este nuevo intento.</div>
+          <a class="btn pri lg block">Rehacer tarea</a></div>
+        <div class="box late" style="font-size:13.5px"><b>Otro caso:</b> "Desaprobada por entrega fuera de término. Nota obtenida: 8 / 10." Se muestra así cuando el docente desaprueba por atraso.</div>
+        <a class="btn block">Ver qué respondí</a>
+      </div>
+      <div class="tabbar"><span>Hoy</span><span class="on">Tareas</span><span>Progreso</span></div>
+    </div></div>
+  </div></div></figure>
+
+  <figure class="mock"><figcaption><span class="code">S13 · S14</span><h4>Mi progreso y Mis preferencias</h4><p>Progreso centrado en la constancia (racha, entregas a tiempo) más el promedio por materia. Las insignias se pueden ocultar. En preferencias, el alumno ajusta lectura, colores y avisos para todas sus tareas.</p></figcaption>
+  <div class="scroll"><div class="phones">
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>20:14</span><span>WiFi 51 %</span></div>
+      <div class="stu-top"><div style="font-family:var(--f-display);font-size:18px;font-weight:600">Mi progreso</div><span class="sp"></span><span class="av">TR</span></div>
+      <div class="stu-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="box" style="background:var(--sun-soft);border-color:var(--sun)"><div class="muted" style="font-size:12px">Racha</div><div style="font-family:var(--f-display);font-size:26px;font-weight:700">5 días</div></div>
+          <div class="box"><div class="muted" style="font-size:12px">A tiempo</div><div style="font-family:var(--f-display);font-size:26px;font-weight:700">92 %</div></div>
+        </div>
+        <div class="box"><h6 style="font-size:15px">Promedio por materia</h6><div style="display:grid;gap:10px;font-size:14px">
+          <div>Cs. Naturales <span style="float:right">8,0</span><div class="bar-h ok"><i style="width:80%"></i></div></div>
+          <div>Matemática <span style="float:right">7,2</span><div class="bar-h ok"><i style="width:72%"></i></div></div>
+          <div>Pr. del Lenguaje <span style="float:right;color:var(--bad)">6,6</span><div class="bar-h"><i style="width:66%;background:var(--bad)"></i></div></div></div></div>
+        <div class="box"><h6 style="font-size:15px">Logros</h6><div class="row" style="gap:12px">
+          <div style="text-align:center"><div style="width:50px;height:50px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:var(--accent)">10</div><div class="muted" style="font-size:11px">entregas</div></div>
+          <div style="text-align:center"><div style="width:50px;height:50px;border-radius:50%;background:var(--ok-soft);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:var(--ok)">7d</div><div class="muted" style="font-size:11px">semana</div></div></div></div>
+      </div>
+      <div class="tabbar"><span>Hoy</span><span>Tareas</span><span class="on">Progreso</span></div>
+    </div></div>
+    <div class="frame phone"><div class="stu">
+      <div class="status"><span>20:15</span><span>WiFi 51 %</span></div>
+      <div class="stu-top"><a class="btn ghost" style="padding-left:0">‹</a><div style="font-family:var(--f-display);font-size:18px;font-weight:600">Mis preferencias</div></div>
+      <div class="stu-body" style="font-size:15px">
+        <div><div style="font-weight:700;margin-bottom:6px">Tamaño de letra</div><div class="row"><span class="chip">A</span><span class="chip on" style="font-size:15px">A</span><span class="chip" style="font-size:18px">A</span></div></div>
+        <div><div style="font-weight:700;margin-bottom:6px">Colores</div><div class="row"><span class="chip on">Claro</span><span class="chip">Oscuro</span><span class="chip">Alto contraste</span></div></div>
+        <div class="row"><span class="tog on"></span>Leer en voz alta automáticamente</div>
+        <div class="row"><span class="tog on"></span>Avisarme cuándo tomar una pausa</div>
+        <div class="row"><span class="tog"></span>Mostrar reloj mientras resuelvo</div>
+        <div class="row"><span class="tog on"></span>Menos animaciones</div>
+        <div class="row"><span class="tog"></span>Mostrar logros</div>
+        <div class="row"><span class="tog on"></span>Recordatorios de vencimiento</div>
+        <div class="box sunk" style="font-size:13px">Los cambios se aplican a todas tus tareas.</div>
+      </div>
+      <div class="tabbar"><span>Hoy</span><span>Tareas</span><span class="on">Progreso</span></div>
+    </div></div>
+  </div></div></figure>
+
+</section>
+
+<!-- ================= FASES ================= -->
+<section id="fases">
+  <div class="eyebrow">Hoja de ruta</div>
+  <h2>Fases sugeridas</h2>
+  <div class="grid3">
+    <div class="card"><h3>MVP</h3><ul><li>Los tres roles con ABM y asignaciones</li><li>Los cinco tipos de tarea por formulario</li><li>Creación desde texto y desde foto con revisión</li><li>Experiencia del alumno en modo foco</li><li>Precorrección automática y aprobación del docente</li><li>Entregas fuera de término y rehacer</li><li>Diseño mobile-first y docente en el celular</li><li>Ingreso con Google</li><li>Google Classroom: importar materiales, cursos y alumnos</li><li>Impresión</li><li>Notificaciones básicas</li></ul></div>
+    <div class="card"><h3>Fase 2</h3><ul><li>Banco compartido entre docentes</li><li>Gamificación (rachas, insignias)</li><li>Reportes exportables</li><li>QR en la hoja impresa</li></ul></div>
+    <div class="card"><h3>Fase 3</h3><ul><li>Corregir tareas resueltas en papel por foto</li><li>Modo sin conexión</li><li>Analítica avanzada de atención</li></ul></div>
+  </div>
+</section>
+
+<!-- ================= PREGUNTAS ================= -->
+<section id="preguntas">
+  <div class="eyebrow">Para cerrar el alcance</div>
+  <h2>Preguntas abiertas</h2>
+  <div class="grid2">
+    <div class="card"><h3>Sin preguntas abiertas</h3><p class="muted" style="margin:0">Todas las preguntas están respondidas y aplicadas (ver <a href="#decisiones">Decisiones confirmadas</a>). Queda pendiente definir plazo y presupuesto del MVP.</p></div>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+(function(){
+  var NAV = {
+    admin: { role:"Administrador", me:["GP","Graciela Paz"], items:["Inicio","Materias","Docentes","Alumnos","Asignaciones","Tareas","Reportes","Configuración"] },
+    docente: { role:"Docente", me:["ML","Marcela López"], items:["Inicio","Mis alumnos","Tareas","Nueva tarea",["Corrección","6"],"Banco"] }
+  };
+  document.querySelectorAll("[data-side]").forEach(function(el){
+    var parts = el.getAttribute("data-side").split(":"), cfg = NAV[parts[0]], active = parts[1];
+    var html = '<div class="logo">Fert<span>elligence</span></div><div class="role">' + cfg.role + '</div>';
+    cfg.items.forEach(function(it){
+      var name = Array.isArray(it) ? it[0] : it, badge = Array.isArray(it) ? '<b>' + it[1] + '</b>' : '';
+      html += '<a class="' + (name === active ? 'on' : '') + '">' + name + badge + '</a>';
+    });
+    html += '<div class="me"><span class="av">' + cfg.me[0] + '</span><span>' + cfg.me[1] + '</span></div>';
+    el.innerHTML = html;
+  });
+})();
+</script>

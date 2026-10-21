@@ -1,0 +1,574 @@
+// Esquema de una instalación (una escuela). Ver "Fertelligence · Documento técnico", sección Modelo de base de datos.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING_CONSENT
+  DISABLED
+}
+
+enum ThemePreference {
+  SYSTEM
+  LIGHT
+  DARK
+}
+
+enum LegalDocumentType {
+  PRIVACY_POLICY
+  TERMS
+}
+
+enum ConsentMethod {
+  EMAIL_LINK
+  PAPER
+}
+
+enum ConsentStatus {
+  GRANTED
+  REFUSED
+}
+
+enum TaskType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  MATCHING
+  FILL_BLANKS
+  STRIKE_OUT
+}
+
+enum TaskOrigin {
+  FORM
+  PHOTO
+  TEXT
+  CLASSROOM
+}
+
+enum TaskStatus {
+  DRAFT
+  SCHEDULED
+  NEW
+  IN_PROGRESS
+  OVERDUE
+  COMPLETED
+  CORRECTED
+  REDO
+}
+
+enum AiJobKind {
+  OCR
+  GENERATE
+  CLASSROOM_MATERIAL
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+}
+
+enum ClassroomImportKind {
+  MATERIAL
+  ROSTER
+}
+
+// ---------- Personas y acceso ----------
+
+model User {
+  id            String          @id @default(uuid()) @db.Uuid
+  email         String          @unique // siempre en minúsculas
+  firstName     String          @map("first_name")
+  lastName      String          @map("last_name")
+  role          Role
+  passwordHash  String?         @map("password_hash")
+  googleSub     String?         @unique @map("google_sub")
+  status        UserStatus      @default(ACTIVE)
+  theme         ThemePreference @default(SYSTEM)
+  emailVerified DateTime?       @map("email_verified")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  deletedAt     DateTime?       @map("deleted_at")
+
+  accounts           Account[]
+  sessions           Session[]
+  studentProfile     StudentProfile?
+  consents           Consent[]
+  termsAcceptances   TermsAcceptance[]
+  googleToken        GoogleToken?
+  teacherSubjects    TeacherSubject[]
+  studentAssignments Assignment[]      @relation("AssignmentStudent")
+  teacherAssignments Assignment[]      @relation("AssignmentTeacher")
+  createdTemplates   TaskTemplate[]    @relation("TemplateCreatedBy")
+  notifications      Notification[]
+  achievements       Achievement[]
+
+  @@index([role, status])
+  @@map("users")
+}
+
+// Tablas estándar de Auth.js (ingreso con Google y sesiones en la base)
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @map("user_id") @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id") @db.Uuid
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model StudentProfile {
+  userId             String  @id @map("user_id") @db.Uuid
+  courseId           String  @map("course_id") @db.Uuid
+  familyContactName  String? @map("family_contact_name")
+  familyContactEmail String? @map("family_contact_email")
+  familyContactPhone String? @map("family_contact_phone")
+  preferences        Json    @default("{}")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@map("student_profiles")
+}
+
+model LegalDocument {
+  id            String            @id @default(uuid()) @db.Uuid
+  type          LegalDocumentType
+  version       String
+  content       String
+  effectiveFrom DateTime          @map("effective_from")
+  majorChange   Boolean           @default(false) @map("major_change")
+  createdAt     DateTime          @default(now()) @map("created_at")
+
+  consents         Consent[]
+  termsAcceptances TermsAcceptance[]
+
+  @@unique([type, version])
+  @@map("legal_documents")
+}
+
+model Consent {
+  id                  String        @id @default(uuid()) @db.Uuid
+  studentId           String        @map("student_id") @db.Uuid
+  legalDocumentId     String        @map("legal_document_id") @db.Uuid
+  method              ConsentMethod
+  status              ConsentStatus
+  grantorName         String        @map("grantor_name")
+  grantorRelationship String        @map("grantor_relationship")
+  grantorEmail        String?       @map("grantor_email")
+  statements          Json? // texto exacto de las declaraciones aceptadas
+  decidedAt           DateTime      @map("decided_at")
+  ip                  String?
+  userAgent           String?       @map("user_agent")
+  evidenceFileId      String?       @map("evidence_file_id") @db.Uuid
+  recordedById        String?       @map("recorded_by_id") @db.Uuid
+  revokedAt           DateTime?     @map("revoked_at")
+  createdAt           DateTime      @default(now()) @map("created_at")
+
+  student       User          @relation(fields: [studentId], references: [id])
+  legalDocument LegalDocument @relation(fields: [legalDocumentId], references: [id])
+  evidenceFile  File?         @relation(fields: [evidenceFileId], references: [id])
+
+  @@index([studentId])
+  @@map("consents")
+}
+
+model TermsAcceptance {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @map("user_id") @db.Uuid
+  legalDocumentId String   @map("legal_document_id") @db.Uuid
+  acceptedAt      DateTime @default(now()) @map("accepted_at")
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  legalDocument LegalDocument @relation(fields: [legalDocumentId], references: [id])
+
+  @@unique([userId, legalDocumentId])
+  @@map("terms_acceptances")
+}
+
+model GoogleToken {
+  userId          String   @id @map("user_id") @db.Uuid
+  refreshTokenEnc String   @map("refresh_token_enc") // AES-256-GCM
+  scopes          String[]
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_tokens")
+}
+
+// ---------- Escuela y asignaciones ----------
+
+model SchoolSettings {
+  id                  Int      @id @default(1)
+  name                String
+  passGrade           Int      @default(7) @map("pass_grade")
+  aiMonthlyBudgetUsd  Decimal  @default(50) @map("ai_monthly_budget_usd") @db.Decimal(8, 2)
+  achievementsEnabled Boolean  @default(true) @map("achievements_enabled")
+  googleLoginEnabled  Boolean  @default(true) @map("google_login_enabled")
+  activeCycleId       String?  @map("active_cycle_id") @db.Uuid
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  activeCycle SchoolCycle? @relation(fields: [activeCycleId], references: [id])
+
+  @@map("school_settings")
+}
+
+model SchoolCycle {
+  id       String   @id @default(uuid()) @db.Uuid
+  year     Int      @unique
+  startsOn DateTime @map("starts_on") @db.Date
+  endsOn   DateTime @map("ends_on") @db.Date
+
+  courses     Course[]
+  assignments Assignment[]
+  settings    SchoolSettings[]
+
+  @@map("school_cycles")
+}
+
+model Course {
+  id                String  @id @default(uuid()) @db.Uuid
+  cycleId           String  @map("cycle_id") @db.Uuid
+  name              String
+  classroomCourseId String? @map("classroom_course_id")
+
+  cycle    SchoolCycle      @relation(fields: [cycleId], references: [id])
+  students StudentProfile[]
+
+  @@unique([cycleId, name])
+  @@map("courses")
+}
+
+model Subject {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique
+  area        String?
+  color       String?
+  description String?
+  archivedAt  DateTime? @map("archived_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  teachers    TeacherSubject[]
+  assignments Assignment[]
+  templates   TaskTemplate[]
+
+  @@map("subjects")
+}
+
+model TeacherSubject {
+  teacherId String @map("teacher_id") @db.Uuid
+  subjectId String @map("subject_id") @db.Uuid
+
+  teacher User    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@id([teacherId, subjectId])
+  @@map("teacher_subjects")
+}
+
+// Un solo docente activo por alumno y materia en cada ciclo: índice único parcial en la migración.
+model Assignment {
+  id        String   @id @default(uuid()) @db.Uuid
+  studentId String   @map("student_id") @db.Uuid
+  subjectId String   @map("subject_id") @db.Uuid
+  teacherId String   @map("teacher_id") @db.Uuid
+  cycleId   String   @map("cycle_id") @db.Uuid
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  student User        @relation("AssignmentStudent", fields: [studentId], references: [id])
+  teacher User        @relation("AssignmentTeacher", fields: [teacherId], references: [id])
+  subject Subject     @relation(fields: [subjectId], references: [id])
+  cycle   SchoolCycle @relation(fields: [cycleId], references: [id])
+  tasks   Task[]
+
+  @@index([teacherId, active])
+  @@index([studentId, active])
+  @@map("assignments")
+}
+
+// ---------- Tareas ----------
+
+model TaskTemplate {
+  id           String     @id @default(uuid()) @db.Uuid
+  title        String
+  instructions String
+  subjectId    String     @map("subject_id") @db.Uuid
+  type         TaskType
+  settings     Json       @default("{}") // varias respuestas, mezclar, justificación, banco de palabras, redoScope
+  origin       TaskOrigin @default(FORM)
+  inBank       Boolean    @default(false) @map("in_bank")
+  createdById  String     @map("created_by_id") @db.Uuid
+  onBehalfOfId String?    @map("on_behalf_of_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  subject   Subject          @relation(fields: [subjectId], references: [id])
+  createdBy User             @relation("TemplateCreatedBy", fields: [createdById], references: [id])
+  items     TemplateItem[]
+  tasks     Task[]
+  sources   TemplateSource[]
+
+  @@map("task_templates")
+}
+
+model TemplateItem {
+  id            String  @id @default(uuid()) @db.Uuid
+  templateId    String  @map("template_id") @db.Uuid
+  position      Int
+  content       Json // forma según el tipo: ver src/task-types.ts
+  correctAnswer Json    @map("correct_answer")
+  maxPoints     Decimal @map("max_points") @db.Decimal(6, 2)
+  explanation   String?
+  imageFileId   String? @map("image_file_id") @db.Uuid
+
+  template  TaskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  imageFile File?        @relation(fields: [imageFileId], references: [id])
+  answers   Answer[]
+
+  @@unique([templateId, position])
+  @@map("template_items")
+}
+
+model Task {
+  id             String     @id @default(uuid()) @db.Uuid
+  templateId     String     @map("template_id") @db.Uuid
+  assignmentId   String     @map("assignment_id") @db.Uuid
+  status         TaskStatus @default(DRAFT)
+  startsAt       DateTime   @map("starts_at")
+  dueAt          DateTime   @map("due_at")
+  passGrade      Int        @default(7) @map("pass_grade")
+  currentAttempt Int        @default(0) @map("current_attempt")
+  publishedAt    DateTime?  @map("published_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  template   TaskTemplate @relation(fields: [templateId], references: [id])
+  assignment Assignment   @relation(fields: [assignmentId], references: [id])
+  attempts   Attempt[]
+
+  @@index([assignmentId])
+  @@index([status, dueAt])
+  @@map("tasks")
+}
+
+model Attempt {
+  id          String    @id @default(uuid()) @db.Uuid
+  taskId      String    @map("task_id") @db.Uuid
+  number      Int
+  startedAt   DateTime  @default(now()) @map("started_at")
+  submittedAt DateTime? @map("submitted_at")
+  late        Boolean   @default(false)
+  lateDays    Int       @default(0) @map("late_days")
+  redoDueAt   DateTime? @map("redo_due_at")
+
+  task    Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  answers Answer[]
+  result  Result?
+
+  @@unique([taskId, number])
+  @@map("attempts")
+}
+
+model Answer {
+  id                String   @id @default(uuid()) @db.Uuid
+  attemptId         String   @map("attempt_id") @db.Uuid
+  itemId            String   @map("item_id") @db.Uuid
+  response          Json?
+  autoPoints        Decimal? @map("auto_points") @db.Decimal(6, 2)
+  aiSuggestedPoints Decimal? @map("ai_suggested_points") @db.Decimal(6, 2)
+  finalPoints       Decimal? @map("final_points") @db.Decimal(6, 2)
+  itemComment       String?  @map("item_comment")
+  carriedOver       Boolean  @default(false) @map("carried_over")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  attempt Attempt      @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  item    TemplateItem @relation(fields: [itemId], references: [id])
+
+  @@unique([attemptId, itemId])
+  @@map("answers")
+}
+
+model Result {
+  attemptId       String   @id @map("attempt_id") @db.Uuid
+  suggestedGrade  Int      @map("suggested_grade")
+  grade           Int
+  gradeOverridden Boolean  @default(false) @map("grade_overridden")
+  passed          Boolean
+  failedForLate   Boolean  @default(false) @map("failed_for_late")
+  reason          String?
+  comment         String?
+  redoRequested   Boolean  @default(false) @map("redo_requested")
+  approvedById    String   @map("approved_by_id") @db.Uuid
+  onBehalfOfId    String?  @map("on_behalf_of_id") @db.Uuid
+  approvedAt      DateTime @default(now()) @map("approved_at")
+
+  attempt Attempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@map("results")
+}
+
+// ---------- Archivos e IA ----------
+
+model File {
+  id           String   @id @default(uuid()) @db.Uuid
+  storageKey   String   @unique @map("storage_key")
+  mimeType     String   @map("mime_type")
+  sizeBytes    Int      @map("size_bytes")
+  uploadedById String?  @map("uploaded_by_id") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  items    TemplateItem[]
+  sources  TemplateSource[]
+  consents Consent[]
+
+  @@map("files")
+}
+
+model TemplateSource {
+  templateId String @map("template_id") @db.Uuid
+  fileId     String @map("file_id") @db.Uuid
+
+  template TaskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  file     File         @relation(fields: [fileId], references: [id])
+
+  @@id([templateId, fileId])
+  @@map("template_sources")
+}
+
+model AiJob {
+  id            String    @id @default(uuid()) @db.Uuid
+  kind          AiJobKind
+  requestedById String    @map("requested_by_id") @db.Uuid
+  status        JobStatus @default(QUEUED)
+  input         Json
+  output        Json?
+  model         String?
+  inputTokens   Int?      @map("input_tokens")
+  outputTokens  Int?      @map("output_tokens")
+  costUsd       Decimal?  @map("cost_usd") @db.Decimal(10, 4)
+  error         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  finishedAt    DateTime? @map("finished_at")
+
+  @@index([createdAt])
+  @@map("ai_jobs")
+}
+
+model ClassroomImport {
+  id                String              @id @default(uuid()) @db.Uuid
+  kind              ClassroomImportKind
+  requestedById     String              @map("requested_by_id") @db.Uuid
+  classroomCourseId String              @map("classroom_course_id")
+  summary           Json?
+  createdAt         DateTime            @default(now()) @map("created_at")
+
+  @@map("classroom_imports")
+}
+
+// ---------- Comunicación y registro ----------
+
+model Notification {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  kind      String
+  payload   Json      @default("{}")
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@map("notifications")
+}
+
+model EmailLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  to        String
+  template  String
+  resendId  String?  @map("resend_id")
+  status    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("email_log")
+}
+
+model Achievement {
+  id        String   @id @default(uuid()) @db.Uuid
+  studentId String   @map("student_id") @db.Uuid
+  kind      String
+  earnedAt  DateTime @default(now()) @map("earned_at")
+
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, kind])
+  @@map("achievements")
+}
+
+// Nunca se modifica ni se borra.
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  actorId      String?  @map("actor_id") @db.Uuid
+  onBehalfOfId String?  @map("on_behalf_of_id") @db.Uuid
+  action       String
+  entity       String
+  entityId     String?  @map("entity_id")
+  before       Json?
+  after        Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_log")
+}
