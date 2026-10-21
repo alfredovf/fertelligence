@@ -72,7 +72,7 @@ export async function startOrResume(studentId: string, taskId: string): Promise<
   const previous = open; // el intento anterior, ya entregado (solo existe al rehacer)
   const settings = readSettings(task.template.settings);
   const carry =
-    task.status === "REDO" && settings.redoScope === "INCORRECT_ONLY" && previous
+    previous?.result?.redoRequested && settings.redoScope === "INCORRECT_ONLY"
       ? previous.answers.filter((a) => {
           const item = task.template.items.find((i) => i.id === a.itemId);
           return item && a.finalPoints !== null && Number(a.finalPoints) >= Number(item.maxPoints);

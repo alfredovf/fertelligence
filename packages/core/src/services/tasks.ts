@@ -239,7 +239,7 @@ export async function extendDueDate(actor: SessionUser, templateId: string, dueA
 // Cambios de estado por fecha. Lo corre el worker cada pocos minutos.
 export async function tickTaskStatuses(now = new Date()): Promise<{ opened: number; overdue: number }> {
   const opened = await prisma.task.updateMany({ where: { status: "SCHEDULED", startsAt: { lte: now } }, data: { status: "NEW" } });
-  const overdue = await prisma.task.updateMany({ where: { status: { in: ["NEW", "IN_PROGRESS"] }, dueAt: { lt: now } }, data: { status: "OVERDUE" } });
+  const overdue = await prisma.task.updateMany({ where: { status: { in: ["NEW", "IN_PROGRESS", "REDO"] }, dueAt: { lt: now } }, data: { status: "OVERDUE" } });
   return { opened: opened.count, overdue: overdue.count };
 }
 

@@ -8,6 +8,7 @@ export const QUEUES = {
   email: "email.send",
   consentReminders: "consent.reminders",
   taskTick: "tasks.tick",
+  dueSoon: "tasks.due_soon",
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];

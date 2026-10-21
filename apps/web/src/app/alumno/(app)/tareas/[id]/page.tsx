@@ -2,6 +2,7 @@ import type { TaskTypeName } from "@fertelligence/core";
 import { currentAttempt, isAnswered, isOpen, loadStudentTask } from "@fertelligence/core/services/attempts";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { StudentResult } from "@/components/student/result-view";
 import { ListenButton } from "@/components/student/speech";
 import { Notice, Pill } from "@/components/ui";
 import { formatDateTime, formatWeekday } from "@/lib/dates";
@@ -45,7 +46,7 @@ export default async function BeforeStartPage({ params }: { params: Promise<{ id
       </div>
 
       {task.status === "OVERDUE" && <Notice tone="bad">Esta tarea venció el {formatWeekday(task.dueAt)}. Todavía podés entregarla: va a quedar como fuera de término.</Notice>}
-      {redo && <Notice tone="warn">Tu docente te pidió rehacerla. La nota que vale es la de este nuevo intento.</Notice>}
+      {redo && !task.attempts.some((a) => a.result) && <Notice tone="warn">Tu docente te pidió rehacerla. La nota que vale es la de este nuevo intento.</Notice>}
       {task.status === "COMPLETED" && <Notice tone="ok">Ya la entregaste{attempt?.late ? " (fuera de término)" : ""}. Te avisamos cuando esté corregida.</Notice>}
 
       <div className="grid grid-cols-3 gap-2">
@@ -73,6 +74,7 @@ export default async function BeforeStartPage({ params }: { params: Promise<{ id
           </form>
         </>
       )}
+      <StudentResult task={task} />
       <Link href={`/tareas/${task.templateId}/imprimir?tarea=${task.id}`} target="_blank" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-paper px-4 font-bold text-ink no-underline">
         Imprimir para la carpeta
       </Link>

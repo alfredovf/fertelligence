@@ -42,7 +42,22 @@ export const emails = {
       `El enlace es personal y vence el ${p.expires}. Si tenés preguntas o preferís firmar en papel, comunicate con la escuela.`,
     ], { label: "Leer y dar mi consentimiento", url: p.url }, `Recibiste este mensaje porque ${p.school} registró este email como contacto de ${p.studentName}.`),
 
-  consentReceipt: (p: { to: string; contactName: string; studentName: string; decidedAt: string; version: string; privacyUrl: string }) =>
+  correctionPublished: (p: { to: string; name: string; title: string; redo: boolean; url: string }) =>
+    build("correction-published", p.to, p.redo ? `Tenés que rehacer "${p.title}"` : `Ya está corregida "${p.title}"`, p.redo ? "Tu docente te pidió rehacer una tarea" : "Tu tarea ya está corregida", [
+      `Hola, ${p.name}:`,
+      p.redo ? `Tu docente corrigió "${p.title}" y te pidió que la rehagas. Adentro vas a ver qué estuvo bien, qué hay que repasar y la nueva fecha de entrega.` : `Tu docente corrigió "${p.title}". Entrá para ver tu nota y las explicaciones de cada pregunta.`,
+    ], { label: p.redo ? "Ver y rehacer" : "Ver mi nota", url: p.url }),
+
+  newTasks: (p: { to: string; name: string; tasks: { title: string; subject: string; due: string }[]; url: string }) =>
+    build("new-tasks", p.to, p.tasks.length === 1 ? `Tarea nueva: ${p.tasks[0]!.title}` : `Tenés ${p.tasks.length} tareas nuevas`, p.tasks.length === 1 ? "Tenés una tarea nueva" : "Tenés tareas nuevas", [
+      `Hola, ${p.name}:`,
+      ...p.tasks.map((t) => `${t.title} (${t.subject}) · entregá antes del ${t.due}`),
+    ], { label: "Ver mis tareas", url: p.url }),
+
+  dueSoon: (p: { to: string; name: string; title: string; due: string; url: string }) =>
+    build("due-soon", p.to, `Mañana vence "${p.title}"`, "Una tarea vence pronto", [`Hola, ${p.name}:`, `"${p.title}" vence el ${p.due}. Si ya la empezaste, lo que hiciste está guardado.`], { label: "Ir a la tarea", url: p.url }),
+
+  consentReceipt: (p:{ to: string; contactName: string; studentName: string; decidedAt: string; version: string; privacyUrl: string }) =>
     build("consent-receipt", p.to, `Copia de tu consentimiento para ${p.studentName}`, "Registramos tu consentimiento", [
       `Hola, ${p.contactName}:`,
       `Registramos tu consentimiento para que ${p.studentName} use Fertelligence, el ${p.decidedAt}, según la política de privacidad versión ${p.version}.`,

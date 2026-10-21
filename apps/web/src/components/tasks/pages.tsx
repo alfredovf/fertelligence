@@ -272,7 +272,7 @@ export async function TaskDetailView({ user, templateId, basePath, assignedCount
   const template = await loadTemplateFor(user, templateId);
   if (!template) notFound();
   const [tasks, editable, name] = await Promise.all([
-    prisma.task.findMany({ where: { templateId }, include: { assignment: { include: { student: { include: { studentProfile: { include: { course: true } } } } } } }, orderBy: { assignment: { student: { lastName: "asc" } } } }),
+    prisma.task.findMany({ where: { templateId }, include: { assignment: { include: { student: { include: { studentProfile: { include: { course: true } } } } } }, attempts: { orderBy: { number: "desc" }, take: 1, include: { result: true } } }, orderBy: { assignment: { student: { lastName: "asc" } } } }),
     isEditable(templateId),
     ownerName(ownerOf(template)),
   ]);
@@ -312,24 +312,44 @@ export async function TaskDetailView({ user, templateId, basePath, assignedCount
                 <tr>
                   <th>Alumno</th>
                   <th>Estado</th>
-                  <th>Disponible</th>
+                  <th>Resultado</th>
                   <th>Entrega</th>
                 </tr>
               </thead>
               <tbody>
-                {tasks.map((t) => (
-                  <tr key={t.id}>
-                    <td>
-                      {t.assignment.student.lastName}, {t.assignment.student.firstName}
-                      <div className="text-xs text-muted">{t.assignment.student.studentProfile?.course.name}</div>
-                    </td>
-                    <td>
-                      <TaskStatusPill status={t.status} />
-                    </td>
-                    <td className="whitespace-nowrap">{formatDateTime(t.startsAt)}</td>
-                    <td className="whitespace-nowrap">{formatDateTime(t.dueAt)}</td>
-                  </tr>
-                ))}
+                {tasks.map((t) => {
+                  const last = t.attempts[0];
+                  return (
+                    <tr key={t.id}>
+                      <td>
+                        {t.assignment.student.lastName}, {t.assignment.student.firstName}
+                        <div className="text-xs text-muted">{t.assignment.student.studentProfile?.course.name}</div>
+                      </td>
+                      <td>
+                        <TaskStatusPill status={t.status} />
+                        {last?.late && last.submittedAt && (
+                          <div className="mt-1">
+                            <Pill tone="bad">Fuera de término</Pill>
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        {t.status === "COMPLETED" ? (
+                          <Link href={`${basePath.replace(/\/tareas$/, "/correccion")}/${t.id}`} className="font-bold">
+                            Corregir
+                          </Link>
+                        ) : last?.result ? (
+                          <Pill tone={last.result.passed ? "ok" : "bad"}>
+                            {last.result.grade} / 10{t.currentAttempt > 1 ? ` · intento ${t.currentAttempt}` : ""}
+                          </Pill>
+                        ) : (
+                          <span className="text-muted">—</span>
+                        )}
+                      </td>
+                      <td className="whitespace-nowrap">{formatDateTime(t.dueAt)}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </Table>
           )}

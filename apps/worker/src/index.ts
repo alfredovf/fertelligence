@@ -4,6 +4,7 @@ import { sendEmail } from "@fertelligence/core/email/send";
 import type { EmailMessage } from "@fertelligence/core/email/templates";
 import { sendDueConsentReminders } from "@fertelligence/core/services/consent";
 import { tickTaskStatuses } from "@fertelligence/core/services/tasks";
+import { notifyNewTasks, remindDueSoon } from "@fertelligence/core/services/notifications";
 
 // Worker: procesa la cola de trabajos. Las próximas etapas suman IA, Classroom, PDF y el paso de tareas a Vencida.
 async function main() {
@@ -29,6 +30,15 @@ async function main() {
   await boss.work(QUEUES.taskTick, async () => {
     const { opened, overdue } = await tickTaskStatuses();
     if (opened || overdue) console.log(`[worker] Tareas disponibles: ${opened} · vencidas: ${overdue}`);
+    const students = await notifyNewTasks();
+    if (students) console.log(`[worker] Avisos de tareas nuevas a ${students} alumnos`);
+  });
+
+  // Recordatorio de vencimiento: todos los días a las 18, para lo que vence en las próximas 24 horas
+  await boss.schedule(QUEUES.dueSoon, "0 18 * * *", {}, { tz: "America/Argentina/Buenos_Aires" });
+  await boss.work(QUEUES.dueSoon, async () => {
+    const sent = await remindDueSoon();
+    console.log(`[worker] Recordatorios de vencimiento: ${sent}`);
   });
   await tickTaskStatuses(); // al arrancar, para no esperar al primer ciclo
 
