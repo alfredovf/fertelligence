@@ -56,3 +56,15 @@ npm run dev:worker   # worker
 | `npm run db:migrate` | Crea una migración nueva a partir del esquema |
 | `npm run db:deploy` | Aplica las migraciones |
 | `npm run db:seed` | Carga la escuela de prueba (si no existe) |
+
+## Servicios externos
+
+| Servicio | Variables del `.env` | Para qué |
+| --- | --- | --- |
+| Gemini | `GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL` | Crear tareas desde una foto o un texto. Usar una clave de un proyecto con facturación (nivel pago). |
+| Google (OAuth) | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Ingreso con Google y conexión con Classroom. URI de retorno: `http://localhost:3000/api/auth/google/callback` |
+| Google Picker | `GOOGLE_PICKER_API_KEY`, `GOOGLE_PROJECT_NUMBER` | Elegir archivos de Drive al importar desde Classroom |
+| Tokens de Google | `TOKEN_ENCRYPTION_KEY` | Cifra los permisos de Classroom guardados en la base |
+| Resend | `RESEND_API_KEY`, `MAIL_FROM` | Emails |
+
+Después de cambiar el `.env`: `docker compose up -d --force-recreate web worker`.

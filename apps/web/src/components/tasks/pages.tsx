@@ -2,6 +2,7 @@ import type { Prisma, TaskStatus } from "@prisma/client";
 import { taskTypeLabels, type EditorItem, type TaskTypeName } from "@fertelligence/core";
 import type { SessionUser } from "@fertelligence/core/auth/session";
 import { prisma } from "@fertelligence/core/db";
+import { classroomConfigured } from "@fertelligence/core/google/classroom";
 import { aiAvailability } from "@fertelligence/core/services/ai";
 import { assignableStudents, isEditable, loadTemplateFor, ownedBy, ownerOf, readSettings, taskStatusLabels } from "@fertelligence/core/services/tasks";
 import Link from "next/link";
@@ -145,7 +146,7 @@ export async function NewTaskView({ user, teacherId, basePath, backHref }: { use
     { key: "form", title: "Formulario", text: "Elegís el tipo y cargás cada pregunta, la respuesta correcta y la explicación. Es el formulario de abajo.", href: null, note: null },
     { key: "photo", title: "Desde una foto", text: "Sacale una foto a un ejercicio y el sistema lo arma. Vos revisás.", href: ai.available ? `${basePath}/nueva/foto${suffix}` : null, note: ai.available ? "1 a 3 min" : "No disponible" },
     { key: "text", title: "Desde un texto", text: "Pegá, dictá o fotografiá un texto y se generan las preguntas con sus respuestas.", href: ai.available ? `${basePath}/nueva/texto${suffix}` : null, note: ai.available ? "1 a 2 min" : "No disponible" },
-    { key: "classroom", title: "Desde Google Classroom", text: "Importá un material o cuestionario. Llega en la etapa 6.", href: null, note: "Próximamente" },
+    { key: "classroom", title: "Desde Google Classroom", text: "Importá un cuestionario de Forms o usá un archivo de un curso.", href: classroomConfigured() ? `${basePath}/nueva/classroom${suffix}` : null, note: classroomConfigured() ? "Solo lectura" : "Falta configurar Google" },
   ];
   return (
     <>
@@ -212,6 +213,16 @@ export async function TaskItemsView({ user, templateId, basePath, aiJobId }: { u
       />
       <OnBehalfBanner user={user} ownerName={name} />
       {aiJobId && <AiReviewNotice jobId={aiJobId} templateId={template.id} />}
+      {template.origin === "CLASSROOM" && ((template.settings as { importWarnings?: string[] }).importWarnings ?? []).length > 0 && (
+        <Notice tone="warn">
+          <b>Importada de Google Classroom.</b> Revisá las preguntas antes de asignarla.
+          <ul className="mt-2 list-disc pl-5">
+            {((template.settings as { importWarnings?: string[] }).importWarnings ?? []).map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ul>
+        </Notice>
+      )}
       <details className="rounded-xl border border-line bg-paper p-4">
         <summary className="cursor-pointer font-display font-semibold">Datos de la tarea</summary>
         <ActionForm action={updateMetaAction.bind(null, template.id)} className="mt-3 flex flex-col gap-4">

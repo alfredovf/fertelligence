@@ -38,13 +38,17 @@ export function TextSourceForm({
   subjects,
   action,
   transcribe,
+  initialText,
+  initialSubjectId,
 }: {
   subjects: { id: string; name: string }[];
   action: (state: ActionState, form: FormData) => Promise<ActionState>;
   transcribe: (form: FormData) => Promise<{ text?: string; error?: string }>;
+  initialText?: string;
+  initialSubjectId?: string;
 }) {
   const [state, formAction] = useActionState(action, null);
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialText ?? "");
   const [tab, setTab] = useState<"write" | "dictate" | "photo">("write");
   const [type, setType] = useState<TaskTypeName>("MULTIPLE_CHOICE");
   const [reading, setReading] = useState(false);
@@ -114,7 +118,7 @@ export function TextSourceForm({
         {state?.error && <Notice tone="bad">{state.error}</Notice>}
         <label className="flex flex-col gap-1">
           <span className="text-sm font-bold text-muted">Materia</span>
-          <select name="subjectId" required defaultValue="" className={inputClass}>
+          <select name="subjectId" required defaultValue={initialSubjectId ?? ""} className={inputClass}>
             <option value="" disabled>
               Elegí la materia
             </option>

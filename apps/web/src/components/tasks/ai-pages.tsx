@@ -2,6 +2,7 @@ import { taskTypeLabels, type TaskTypeName } from "@fertelligence/core";
 import type { SessionUser } from "@fertelligence/core/auth/session";
 import { prisma } from "@fertelligence/core/db";
 import { aiAvailability, friendlyError, loadJobFor } from "@fertelligence/core/services/ai";
+import { importedText } from "@fertelligence/core/services/classroom";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ActionForm, SubmitButton } from "@/components/action-form";
@@ -85,13 +86,16 @@ export async function PhotoTaskView({ user, teacherId, basePath, backHref }: { u
   );
 }
 
-export async function TextTaskView({ user, teacherId, basePath, backHref }: { user: SessionUser; teacherId: string; basePath: string; backHref: string }) {
-  const [{ name, subjects }, availability] = await Promise.all([teacherContext(teacherId), aiAvailability()]);
+export async function TextTaskView({ user, teacherId, basePath, backHref, sourceId }: { user: SessionUser; teacherId: string; basePath: string; backHref: string; sourceId?: string }) {
+  const [{ name, subjects }, availability, source] = await Promise.all([teacherContext(teacherId), aiAvailability(), sourceId ? importedText(user, sourceId) : null]);
   return (
     <>
       <PageHeader title="Crear desde un texto" subtitle="Elegís el tipo y la cantidad, y se generan las preguntas con sus respuestas y explicaciones." back={{ href: backHref, label: "Nueva tarea" }} />
       <Banner user={user} name={name} />
-      {!availability.available ? <Notice tone="bad">{availability.reason}</Notice> : <TextSourceForm subjects={subjects} action={textTaskAction.bind(null, teacherId, basePath)} transcribe={transcribeAction} />}
+      {!availability.available ? <Notice tone="bad">{availability.reason}</Notice> : <>
+          {source && <Notice tone="ok">Trajimos el texto del archivo de Classroom. Revisalo, elegí el tipo y generá la tarea.</Notice>}
+          <TextSourceForm subjects={subjects} action={textTaskAction.bind(null, teacherId, basePath)} transcribe={transcribeAction} initialText={source?.text} initialSubjectId={source?.subjectId} />
+        </>}
     </>
   );
 }

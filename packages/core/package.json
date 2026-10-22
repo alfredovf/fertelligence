@@ -13,7 +13,9 @@
     "./files": "./src/files.ts",
     "./auth/*": "./src/auth/*.ts",
     "./services/*": "./src/services/*.ts",
-    "./email/*": "./src/email/*.ts"
+    "./email/*": "./src/email/*.ts",
+    "./google/*": "./src/google/*.ts",
+    "./ai/*": "./src/ai/*.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
