@@ -9,6 +9,7 @@ export const QUEUES = {
   consentReminders: "consent.reminders",
   taskTick: "tasks.tick",
   dueSoon: "tasks.due_soon",
+  ai: "ai.run",
 } as const;
 
 export type QueueName = (typeof QUEUES)[keyof typeof QUEUES];

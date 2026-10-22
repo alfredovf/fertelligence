@@ -15,7 +15,7 @@ export const REMINDER_DAYS = [7, 14];
 export const consentStatements = (student: string, school: string) => [
   `Declaro que soy madre, padre, tutor o responsable legal de ${student}.`,
   `Leí la política de privacidad y doy mi consentimiento libre, expreso e informado para que ${school} y el proveedor de Fertelligence traten los datos personales de ${student} y los míos con las finalidades que ahí se describen.`,
-  "Autorizo la transferencia internacional de esos datos a los proveedores indicados en la política (Google, Anthropic y Resend), que pueden procesarlos en países sin un nivel de protección equivalente al de Argentina, como Estados Unidos.",
+  "Autorizo la transferencia internacional de esos datos a los proveedores indicados en la política (Google y Resend), que pueden procesarlos en países sin un nivel de protección equivalente al de Argentina, como Estados Unidos.",
   `Sé que puedo retirar este consentimiento en cualquier momento escribiendo a la escuela, y que en ese caso la cuenta de ${student} se desactivará.`,
 ];
 

@@ -5,6 +5,7 @@ import type { EmailMessage } from "@fertelligence/core/email/templates";
 import { sendDueConsentReminders } from "@fertelligence/core/services/consent";
 import { tickTaskStatuses } from "@fertelligence/core/services/tasks";
 import { notifyNewTasks, remindDueSoon } from "@fertelligence/core/services/notifications";
+import { runAiJob } from "@fertelligence/core/services/ai";
 
 // Worker: procesa la cola de trabajos. Las próximas etapas suman IA, Classroom, PDF y el paso de tareas a Vencida.
 async function main() {
@@ -32,6 +33,11 @@ async function main() {
     if (opened || overdue) console.log(`[worker] Tareas disponibles: ${opened} · vencidas: ${overdue}`);
     const students = await notifyNewTasks();
     if (students) console.log(`[worker] Avisos de tareas nuevas a ${students} alumnos`);
+  });
+
+  // Creación de tareas con IA (Gemini): hasta 2 a la vez
+  await boss.work<{ jobId: string }>(QUEUES.ai, { batchSize: 2, pollingIntervalSeconds: 1 }, async (jobs) => {
+    await Promise.all(jobs.map((job) => runAiJob(job.data.jobId)));
   });
 
   // Recordatorio de vencimiento: todos los días a las 18, para lo que vence en las próximas 24 horas

@@ -20,7 +20,7 @@ export function PrivacySummary({ school, student }: { school: string; student?: 
         <b>Inteligencia artificial:</b> ayuda a los docentes a armar ejercicios. Nunca recibe datos de {who}, y no pone notas: las decide el docente.
       </li>
       <li>
-        <b>Servicios de otros países:</b> usamos servicios de Google, Anthropic y Resend, que guardan o procesan datos en Estados Unidos.
+        <b>Servicios de otros países:</b> usamos servicios de Google (incluida su inteligencia artificial, Gemini) y Resend, que guardan o procesan datos en Estados Unidos.
       </li>
       <li>
         <b>Cuánto tiempo:</b> mientras esté en la escuela y un año más. Después se borra todo.

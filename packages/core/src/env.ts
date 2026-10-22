@@ -50,8 +50,8 @@ export const env = {
     },
   },
   integrations: {
-    get anthropic() {
-      return Boolean(optional("ANTHROPIC_API_KEY"));
+    get gemini() {
+      return Boolean(optional("GEMINI_API_KEY"));
     },
     get google() {
       return Boolean(optional("GOOGLE_CLIENT_ID") && optional("GOOGLE_CLIENT_SECRET"));

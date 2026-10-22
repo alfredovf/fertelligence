@@ -38,7 +38,7 @@ export const emails = {
       `Hola, ${p.contactName}:`,
       `En ${p.school} usamos Fertelligence, una plataforma donde los docentes dan tareas cortas y claras, y los alumnos las resuelven desde el celular, la tablet o la computadora.`,
       `Para que ${p.studentName} pueda empezar a usarla necesitamos tu consentimiento como madre, padre o tutor.`,
-      "En pocas palabras: guardamos su nombre, curso, email, tareas, respuestas y notas; lo ven solo sus docentes y la escuela; no guardamos datos de salud ni grabamos su voz; usamos servicios de Google, Anthropic y Resend que procesan datos en Estados Unidos; podés retirar el permiso cuando quieras.",
+      "En pocas palabras: guardamos su nombre, curso, email, tareas, respuestas y notas; lo ven solo sus docentes y la escuela; no guardamos datos de salud ni grabamos su voz; usamos servicios de Google y Resend que procesan datos en Estados Unidos; podés retirar el permiso cuando quieras.",
       `El enlace es personal y vence el ${p.expires}. Si tenés preguntas o preferís firmar en papel, comunicate con la escuela.`,
     ], { label: "Leer y dar mi consentimiento", url: p.url }, `Recibiste este mensaje porque ${p.school} registró este email como contacto de ${p.studentName}.`),
 

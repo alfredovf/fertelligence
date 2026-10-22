@@ -1,5 +1,6 @@
 import { env, taskTypeLabels } from "@fertelligence/core";
 import { prisma } from "@fertelligence/core/db";
+import { aiBudget } from "@fertelligence/core/services/ai";
 import { checkDatabase, checkQueue, checkStorage, type Check } from "@fertelligence/core/health";
 import { PageHeader } from "@/components/ui";
 import { requireUser } from "@/lib/session";
@@ -51,7 +52,7 @@ function IntegrationRow({ name, configured, purpose }: { name: string; configure
 
 export default async function SystemStatusPage() {
   await requireUser("ADMIN");
-  const [database, storage, queue, sample] = await Promise.all([checkDatabase(), checkStorage(), checkQueue(), loadSampleData()]);
+  const [database, storage, queue, sample, budget] = await Promise.all([checkDatabase(), checkStorage(), checkQueue(), loadSampleData(), aiBudget()]);
 
   return (
     <>
@@ -102,9 +103,9 @@ export default async function SystemStatusPage() {
       <section aria-labelledby="integraciones" className="flex flex-col gap-3">
         <h2 id="integraciones" className="font-display text-xl font-semibold">Servicios externos</h2>
         <ul className="rounded-xl border border-line bg-paper px-4">
-          <IntegrationRow name="Claude (Anthropic)" configured={env.integrations.anthropic} purpose="Leer fotos y generar tareas · etapa 5" />
-          <IntegrationRow name="Google" configured={env.integrations.google} purpose="Ingreso con Google y Classroom · etapas 1 y 6" />
-          <IntegrationRow name="Resend" configured={env.integrations.resend} purpose="Emails · etapa 1" />
+          <IntegrationRow name="Gemini (Google)" configured={env.integrations.gemini} purpose={`Leer fotos y generar tareas · este mes: USD ${budget.spent.toFixed(2)} de ${budget.budget}`} />
+          <IntegrationRow name="Google" configured={env.integrations.google} purpose="Ingreso con Google y Classroom (etapa 6)" />
+          <IntegrationRow name="Resend" configured={env.integrations.resend} purpose="Emails" />
         </ul>
       </section>
 

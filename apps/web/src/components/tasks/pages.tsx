@@ -2,6 +2,7 @@ import type { Prisma, TaskStatus } from "@prisma/client";
 import { taskTypeLabels, type EditorItem, type TaskTypeName } from "@fertelligence/core";
 import type { SessionUser } from "@fertelligence/core/auth/session";
 import { prisma } from "@fertelligence/core/db";
+import { aiAvailability } from "@fertelligence/core/services/ai";
 import { assignableStudents, isEditable, loadTemplateFor, ownedBy, ownerOf, readSettings, taskStatusLabels } from "@fertelligence/core/services/tasks";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +10,7 @@ import { ActionForm, SubmitButton } from "@/components/action-form";
 import { Card, EmptyState, Field, Input, LinkButton, Notice, PageHeader, Pill, Table } from "@/components/ui";
 import { bankAction, createTaskAction, deleteDraftAction, duplicateAction, extendDueAction, publishAction, saveItemsAction, updateMetaAction, uploadImageAction } from "@/app/tareas-actions";
 import { defaultDates, formatDate, formatDateTime, toLocalInput } from "@/lib/dates";
+import { AiReviewNotice } from "./ai-pages";
 import { ItemEditor } from "./item-editor";
 import { StudentItemPreview } from "./task-render";
 import { TaskMetaFields } from "./meta-fields";
@@ -137,25 +139,39 @@ export async function TaskListView({ ownerId, basePath, tab }: { ownerId: string
 export async function NewTaskView({ user, teacherId, basePath, backHref }: { user: SessionUser; teacherId: string; basePath: string; backHref: string }) {
   const subjects = await teacherSubjects(teacherId);
   const name = await ownerName(teacherId);
+  const ai = await aiAvailability();
+  const suffix = user.role === "ADMIN" ? `?docente=${teacherId}` : "";
   const methods = [
-    { key: "form", title: "Formulario", text: "Elegís el tipo y cargás cada pregunta, la respuesta correcta y la explicación.", active: true },
-    { key: "photo", title: "Desde una foto", text: "Sacale una foto a un ejercicio y el sistema lo arma. Llega en la etapa 5.", active: false },
-    { key: "text", title: "Desde un texto", text: "Pegá o dictá un texto y se generan las preguntas. Llega en la etapa 5.", active: false },
-    { key: "classroom", title: "Desde Google Classroom", text: "Importá un material o cuestionario. Llega en la etapa 6.", active: false },
+    { key: "form", title: "Formulario", text: "Elegís el tipo y cargás cada pregunta, la respuesta correcta y la explicación. Es el formulario de abajo.", href: null, note: null },
+    { key: "photo", title: "Desde una foto", text: "Sacale una foto a un ejercicio y el sistema lo arma. Vos revisás.", href: ai.available ? `${basePath}/nueva/foto${suffix}` : null, note: ai.available ? "1 a 3 min" : "No disponible" },
+    { key: "text", title: "Desde un texto", text: "Pegá, dictá o fotografiá un texto y se generan las preguntas con sus respuestas.", href: ai.available ? `${basePath}/nueva/texto${suffix}` : null, note: ai.available ? "1 a 2 min" : "No disponible" },
+    { key: "classroom", title: "Desde Google Classroom", text: "Importá un material o cuestionario. Llega en la etapa 6.", href: null, note: "Próximamente" },
   ];
   return (
     <>
       <PageHeader title="Nueva tarea" back={{ href: backHref, label: "Tareas" }} />
       <OnBehalfBanner user={user} ownerName={name} />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {methods.map((m) => (
-          <div key={m.key} className={`rounded-xl border p-4 ${m.active ? "border-2 border-accent bg-accent-soft" : "border-line bg-paper opacity-70"}`}>
-            <div className="font-display font-semibold">{m.title}</div>
-            <p className="text-sm text-muted">{m.text}</p>
-            {!m.active && <Pill>Próximamente</Pill>}
-          </div>
-        ))}
+        {methods.map((m) => {
+          const inner = (
+            <>
+              <div className="font-display font-semibold">{m.title}</div>
+              <p className="text-sm text-muted">{m.text}</p>
+              {m.note && <Pill>{m.note}</Pill>}
+            </>
+          );
+          return m.href ? (
+            <Link key={m.key} href={m.href} className="flex flex-col gap-1 rounded-xl border border-line bg-paper p-4 text-ink no-underline hover:border-accent">
+              {inner}
+            </Link>
+          ) : (
+            <div key={m.key} className={`flex flex-col gap-1 rounded-xl border p-4 ${m.key === "form" ? "border-2 border-accent bg-accent-soft" : "border-line bg-paper opacity-70"}`}>
+              {inner}
+            </div>
+          );
+        })}
       </div>
+      {!ai.available && <p className="text-sm text-muted">{ai.reason}</p>}
       {subjects.length === 0 ? (
         <Notice tone="bad">{user.role === "ADMIN" ? `${name} no tiene materias asignadas.` : "No tenés materias asignadas."} La administración las carga en la ficha del docente.</Notice>
       ) : (
@@ -172,7 +188,7 @@ export async function NewTaskView({ user, teacherId, basePath, backHref }: { use
 
 // ---------- Ítems ----------
 
-export async function TaskItemsView({ user, templateId, basePath }: { user: SessionUser; templateId: string; basePath: string }) {
+export async function TaskItemsView({ user, templateId, basePath, aiJobId }: { user: SessionUser; templateId: string; basePath: string; aiJobId?: string }) {
   const template = await loadTemplateFor(user, templateId);
   if (!template) notFound();
   const [editable, subjects, name, assigned] = await Promise.all([isEditable(templateId), teacherSubjects(ownerOf(template)), ownerName(ownerOf(template)), prisma.task.count({ where: { templateId } })]);
@@ -195,6 +211,7 @@ export async function TaskItemsView({ user, templateId, basePath }: { user: Sess
         }
       />
       <OnBehalfBanner user={user} ownerName={name} />
+      {aiJobId && <AiReviewNotice jobId={aiJobId} templateId={template.id} />}
       <details className="rounded-xl border border-line bg-paper p-4">
         <summary className="cursor-pointer font-display font-semibold">Datos de la tarea</summary>
         <ActionForm action={updateMetaAction.bind(null, template.id)} className="mt-3 flex flex-col gap-4">
