@@ -1,5 +1,6 @@
 import { taskTypeLabels } from "@fertelligence/core";
 import { prisma } from "@fertelligence/core/db";
+import { SLOW_CORRECTION_DAYS, studentAlerts, teacherSummary } from "@fertelligence/core/services/reports";
 import { ownedBy } from "@fertelligence/core/services/tasks";
 import Link from "next/link";
 import { Card, LinkButton, Notice, PageHeader, Pill, Table } from "@/components/ui";
@@ -11,7 +12,7 @@ export const dynamic = "force-dynamic";
 // Inicio del docente: avisos, últimas tareas y sus alumnos. La bandeja de corrección llega en la etapa 4.
 export default async function TeacherHome() {
   const user = await requireUser("TEACHER");
-  const [assignments, templates, notifications] = await Promise.all([
+  const [assignments, templates, notifications, summary, alerts] = await Promise.all([
     prisma.assignment.findMany({
       where: { teacherId: user.id, active: true },
       include: { student: { include: { studentProfile: { include: { course: true } } } }, subject: true },
@@ -19,6 +20,8 @@ export default async function TeacherHome() {
     }),
     prisma.taskTemplate.findMany({ where: ownedBy(user.id), include: { subject: true, _count: { select: { tasks: true } }, tasks: { select: { dueAt: true }, orderBy: { dueAt: "asc" }, take: 1 } }, orderBy: { updatedAt: "desc" }, take: 5 }),
     prisma.notification.findMany({ where: { userId: user.id, readAt: null, kind: "task.created_on_behalf" }, orderBy: { createdAt: "desc" }, take: 5 }),
+    teacherSummary(user.id),
+    studentAlerts(user.id),
   ]);
 
   return (
@@ -32,6 +35,34 @@ export default async function TeacherHome() {
           </Notice>
         );
       })}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {[
+          { label: "Para corregir", value: summary.toCorrect, href: "/docente/correccion", alert: summary.slow > 0 ? `${summary.slow} hace más de ${SLOW_CORRECTION_DAYS} días` : null },
+          { label: "Vencen esta semana", value: summary.dueThisWeek, href: "/docente/tareas", alert: null },
+          { label: "Alumnos con alertas", value: new Set(alerts.map((a) => a.studentId)).size, href: "/docente/alumnos", alert: null },
+          { label: "Borradores", value: summary.drafts, href: "/docente/tareas?ver=borradores", alert: null },
+        ].map((k) => (
+          <Link key={k.label} href={k.href} className="rounded-xl border border-line bg-paper p-4 text-ink no-underline hover:border-muted">
+            <div className="font-display text-3xl font-semibold tabular-nums">{k.value}</div>
+            <div className="text-sm text-muted">{k.label}</div>
+            {k.alert && <div className="mt-1 text-xs font-bold text-bad">{k.alert}</div>}
+          </Link>
+        ))}
+      </div>
+      {alerts.length > 0 && (
+        <Card title="Alertas" actions={<Link href="/docente/alumnos">Ver alumnos</Link>}>
+          <ul className="flex flex-col divide-y divide-line">
+            {alerts.slice(0, 6).map((a, i) => (
+              <li key={i} className="flex flex-wrap items-center gap-2 py-2">
+                <Link href={`/docente/alumnos/${a.studentId}`} className="font-bold">
+                  {a.name}
+                </Link>
+                <span className="text-muted">{a.detail}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <Card title="Últimas tareas" actions={<Link href="/docente/tareas">Ver todas</Link>}>
           {templates.length === 0 ? (

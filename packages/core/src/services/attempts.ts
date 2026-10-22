@@ -147,6 +147,9 @@ export async function submitAttempt(studentId: string, taskId: string, now = new
     await tx.notification.create({ data: { userId: teacherId, kind: "task.submitted", payload: { taskId, templateId: task.templateId, title: task.template.title, late, studentId } } });
   });
   await audit({ actorId: studentId, action: "attempt.submit", entity: "task", entityId: taskId, after: { number: attempt.number, late, lateDays } });
+  // Logros (import diferido para evitar una dependencia circular con achievements.ts)
+  const { awardAfterSubmit } = await import("./achievements");
+  await awardAfterSubmit(studentId);
   return ok({ late });
 }
 

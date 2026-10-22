@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Filtro rápido: sin cookie de sesión no se entra a las áreas privadas.
 // La validación real de la sesión y del rol se hace en el servidor (lib/session.ts).
-const PRIVATE = ["/admin", "/docente", "/alumno", "/perfil", "/terminos"];
+const PRIVATE = ["/admin", "/docente", "/alumno", "/perfil", "/terminos", "/notificaciones"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

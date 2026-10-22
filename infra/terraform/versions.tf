@@ -1,0 +1,23 @@
+terraform {
+  required_version = ">= 1.9"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 6.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
+  }
+
+  # El estado vive en un bucket de GCS que se crea a mano una sola vez (ver infra/README.md).
+  backend "gcs" {
+    prefix = "fertelligence"
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}

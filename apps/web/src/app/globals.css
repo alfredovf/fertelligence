@@ -74,6 +74,10 @@ body {
   line-height: 1.6;
 }
 
+main:focus {
+  outline: none;
+}
+
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;

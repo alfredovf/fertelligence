@@ -1,3 +1,4 @@
+import { createServer } from "node:http";
 import { getBoss, QUEUES } from "@fertelligence/core/queue";
 import { prisma } from "@fertelligence/core/db";
 import { sendEmail } from "@fertelligence/core/email/send";
@@ -6,6 +7,7 @@ import { sendDueConsentReminders } from "@fertelligence/core/services/consent";
 import { tickTaskStatuses } from "@fertelligence/core/services/tasks";
 import { notifyNewTasks, remindDueSoon } from "@fertelligence/core/services/notifications";
 import { runAiJob } from "@fertelligence/core/services/ai";
+import { backfillAchievements } from "@fertelligence/core/services/achievements";
 
 // Worker: procesa la cola de trabajos. Las próximas etapas suman IA, Classroom, PDF y el paso de tareas a Vencida.
 async function main() {
@@ -47,11 +49,16 @@ async function main() {
     console.log(`[worker] Recordatorios de vencimiento: ${sent}`);
   });
   await tickTaskStatuses(); // al arrancar, para no esperar al primer ciclo
+  await backfillAchievements();
 
   console.log(`[worker] Escuchando: ${Object.values(QUEUES).join(", ")}`);
 
+  // En Cloud Run el contenedor tiene que responder en PORT; en Docker local no hace falta.
+  const health = process.env.PORT ? createServer((_req, res) => res.end("ok")).listen(Number(process.env.PORT)) : null;
+
   const shutdown = async (signal: string) => {
     console.log(`[worker] ${signal}: cerrando`);
+    health?.close();
     await boss.stop({ graceful: true, timeout: 10_000 });
     await prisma.$disconnect();
     process.exit(0);

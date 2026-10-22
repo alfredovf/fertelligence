@@ -1,4 +1,5 @@
 import { prisma } from "@fertelligence/core/db";
+import { SLOW_CORRECTION_DAYS, schoolReport, studentAlerts } from "@fertelligence/core/services/reports";
 import Link from "next/link";
 import { Card, LinkButton, PageHeader, Pill } from "@/components/ui";
 import { requireUser } from "@/lib/session";
@@ -7,7 +8,8 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const user = await requireUser("ADMIN");
-  const [settings, activeStudents, pendingConsent, teachers, subjects, studentsWithoutTeacher, refused] = await Promise.all([
+  const now = new Date();
+  const [settings, activeStudents, pendingConsent, teachers, subjects, studentsWithoutTeacher, refused, alerts, slowCorrections, month] = await Promise.all([
     prisma.schoolSettings.findUnique({ where: { id: 1 }, include: { activeCycle: true } }),
     prisma.user.count({ where: { role: "STUDENT", status: "ACTIVE", deletedAt: null } }),
     prisma.user.count({ where: { role: "STUDENT", status: "PENDING_CONSENT", deletedAt: null } }),
@@ -19,7 +21,27 @@ export default async function AdminHome() {
       take: 10,
     }),
     prisma.notification.findMany({ where: { userId: user.id, kind: "consent.refused", readAt: null }, orderBy: { createdAt: "desc" }, take: 5 }),
+    studentAlerts(null, now),
+    prisma.task.findMany({
+      where: { status: "COMPLETED", attempts: { some: { submittedAt: { lt: new Date(now.getTime() - SLOW_CORRECTION_DAYS * 86_400_000) }, result: null } } },
+      select: { assignment: { select: { teacher: { select: { id: true, firstName: true, lastName: true } } } } },
+    }),
+    schoolReport({ from: new Date(now.getTime() - 30 * 86_400_000), to: now, courseId: null }),
   ]);
+  // Correcciones demoradas agrupadas por docente.
+  const slowByTeacher = new Map<string, { name: string; count: number }>();
+  for (const t of slowCorrections) {
+    const teacher = t.assignment.teacher;
+    const row = slowByTeacher.get(teacher.id) ?? { name: `${teacher.firstName} ${teacher.lastName}`, count: 0 };
+    row.count++;
+    slowByTeacher.set(teacher.id, row);
+  }
+  const alertedStudents = new Map<string, { name: string; details: string[] }>();
+  for (const a of alerts) {
+    const row = alertedStudents.get(a.studentId) ?? { name: a.name, details: [] };
+    row.details.push(a.detail);
+    alertedStudents.set(a.studentId, row);
+  }
 
   const kpis = [
     { label: "Alumnos activos", value: activeStudents, href: "/admin/alumnos" },
@@ -27,7 +49,8 @@ export default async function AdminHome() {
     { label: "Docentes", value: teachers, href: "/admin/docentes" },
     { label: "Materias", value: subjects, href: "/admin/materias" },
   ];
-  const nothingPending = refused.length === 0 && pendingConsent === 0 && studentsWithoutTeacher.length === 0;
+  const nothingPending = refused.length === 0 && pendingConsent === 0 && studentsWithoutTeacher.length === 0 && slowByTeacher.size === 0;
+  const fmt = (n: number | null, suffix = "") => (n === null ? "—" : `${String(n).replace(".", ",")}${suffix}`);
 
   return (
     <>
@@ -81,9 +104,55 @@ export default async function AdminHome() {
               <Link href="/admin/asignaciones">Asignar</Link>
             </li>
           ))}
+          {[...slowByTeacher.values()].map((t) => (
+            <li key={t.name} className="flex flex-wrap items-center gap-3 py-2">
+              <Pill tone="warn">Corrección demorada</Pill>
+              <span className="flex-1">
+                {t.name} tiene {t.count} {t.count === 1 ? "entrega" : "entregas"} sin corregir hace más de {SLOW_CORRECTION_DAYS} días.
+              </span>
+              <Link href="/admin/correccion">Ver</Link>
+            </li>
+          ))}
           {nothingPending && <li className="py-2 text-muted">Nada pendiente por ahora.</li>}
         </ul>
       </Card>
+      <div className="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
+        <Card title="Últimos 30 días" actions={<Link href="/admin/reportes">Ver reportes</Link>}>
+          {month.totals.assigned === 0 ? (
+            <p className="text-muted">Todavía no hay tareas con entrega en este período.</p>
+          ) : (
+            <dl className="grid grid-cols-2 gap-3">
+              {[
+                { label: "Tareas asignadas", value: fmt(month.totals.assigned) },
+                { label: "Entregadas a tiempo", value: fmt(month.totals.onTimePercent, " %") },
+                { label: "Aprobadas", value: fmt(month.totals.approvalPercent, " %") },
+                { label: "Nota promedio", value: fmt(month.totals.averageGrade) },
+              ].map((k) => (
+                <div key={k.label}>
+                  <dt className="text-sm text-muted">{k.label}</dt>
+                  <dd className="font-display text-2xl font-semibold tabular-nums">{k.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </Card>
+        <Card title={`Alumnos con alertas (${alertedStudents.size})`}>
+          {alertedStudents.size === 0 ? (
+            <p className="text-muted">Ningún alumno con alertas.</p>
+          ) : (
+            <ul className="flex flex-col divide-y divide-line">
+              {[...alertedStudents.entries()].slice(0, 8).map(([id, s]) => (
+                <li key={id} className="flex flex-wrap items-center gap-2 py-2">
+                  <Link href={`/admin/alumnos/${id}/progreso`} className="font-bold">
+                    {s.name}
+                  </Link>
+                  <span className="text-muted">{s.details.join(" · ")}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+      </div>
     </>
   );
 }

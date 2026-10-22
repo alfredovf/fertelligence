@@ -46,6 +46,7 @@ npm run dev:worker   # worker
 | `apps/web` | Next.js: pantallas y API |
 | `apps/worker` | Cola de trabajos (pg-boss) |
 | `packages/core` | Esquema de la base (Prisma), reglas de negocio, tipos de tarea, cálculo de notas |
+| `infra` | Terraform y guía para desplegar en Google Cloud (una base por escuela) |
 
 ## Comandos
 
@@ -68,3 +69,7 @@ npm run dev:worker   # worker
 | Resend | `RESEND_API_KEY`, `MAIL_FROM` | Emails |
 
 Después de cambiar el `.env`: `docker compose up -d --force-recreate web worker`.
+
+## Producción
+
+El despliegue en Google Cloud (Cloud Run, Cloud SQL y Cloud Storage, con una base por escuela) está en [infra/README.md](infra/README.md).

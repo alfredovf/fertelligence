@@ -1,0 +1,55 @@
+name: Deploy
+
+# Despliega en Google Cloud cuando la CI de main termina bien. Queda apagado hasta que se configure
+# la variable del repositorio GCP_DEPLOY_ENABLED=true (ver infra/README.md).
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: vars.GCP_DEPLOY_ENABLED == 'true' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      REGION: ${{ vars.GCP_REGION }}
+      IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/fertelligence/fertelligence
+      SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SHA }}
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Imagen
+        run: |
+          gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+          docker build -t "$IMAGE:$SHA" -t "$IMAGE:latest" .
+          docker push --all-tags "$IMAGE"
+
+      # Por cada escuela: primero migraciones (si fallan, no se toca nada más), después worker y web.
+      - name: Escuelas
+        run: |
+          for school in ${{ vars.GCP_SCHOOLS }}; do
+            echo "::group::$school"
+            gcloud run jobs update "fert-$school-migrate" --image "$IMAGE:$SHA" --region "$REGION" --quiet
+            gcloud run jobs execute "fert-$school-migrate" --region "$REGION" --wait
+            gcloud run services update "fert-$school-worker" --image "$IMAGE:$SHA" --region "$REGION" --quiet
+            gcloud run services update "fert-$school-web" --image "$IMAGE:$SHA" --region "$REGION" --quiet
+            echo "::endgroup::"
+          done

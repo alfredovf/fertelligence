@@ -11,6 +11,7 @@ export default async function TeacherLayout({ children }: { children: React.Reac
       nav={[
         { href: "/docente", label: "Inicio" },
         { href: "/docente/correccion", label: "Para corregir", badge: toCorrect },
+        { href: "/docente/alumnos", label: "Mis alumnos" },
         { href: "/docente/tareas", label: "Tareas" },
         { href: "/docente/tareas/nueva", label: "Nueva tarea" },
       ]}

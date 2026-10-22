@@ -1,5 +1,7 @@
 // Datos de ejemplo: una escuela de prueba con un administrador, dos docentes, cinco alumnos
 // y una tarea de cada tipo. Es idempotente: si la escuela ya existe, no hace nada.
+// Con SEED_MODE=school (escuelas reales) solo crea la escuela, el ciclo, los documentos legales
+// y el primer administrador (ADMIN_EMAIL, ADMIN_FIRST_NAME, ADMIN_LAST_NAME), sin datos de ejemplo.
 import { Prisma, PrismaClient, type TaskType } from "@prisma/client";
 import { hashPassword } from "../src/auth/password";
 import { env } from "../src/env";
@@ -99,6 +101,8 @@ async function main() {
     await setDemoPasswords();
     return;
   }
+
+  if (process.env.SEED_MODE === "school") return bootstrapSchool();
 
   // Validar las tareas de ejemplo contra los esquemas antes de cargarlas
   for (const t of templates) {
@@ -201,6 +205,22 @@ async function main() {
 
   console.log("[seed] Escuela de prueba creada: 1 administrador, 2 docentes, 5 alumnos, 5 tareas por alumno.");
   await setDemoPasswords();
+}
+
+async function bootstrapSchool() {
+  const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  if (!email) throw new Error("Con SEED_MODE=school hay que definir ADMIN_EMAIL.");
+  const year = new Date().getFullYear();
+  await prisma.$transaction(async (tx) => {
+    const cycle = await tx.schoolCycle.create({ data: { year, startsOn: new Date(`${year}-03-01`), endsOn: new Date(`${year}-12-20`) } });
+    await tx.schoolSettings.create({ data: { id: 1, name: env.schoolName, activeCycleId: cycle.id } });
+    for (const type of ["PRIVACY_POLICY", "TERMS"] as const) {
+      await tx.legalDocument.create({ data: { type, version: "1.0", content: "Ver 'Fertelligence · Documentos legales y de consentimiento'.", effectiveFrom: new Date() } });
+    }
+    await tx.user.create({ data: { email, firstName: process.env.ADMIN_FIRST_NAME ?? "Administración", lastName: process.env.ADMIN_LAST_NAME ?? "", role: "ADMIN" } });
+    await tx.auditLog.create({ data: { action: "seed", entity: "school", after: { mode: "school", admin: email } } });
+  });
+  console.log(`[seed] Escuela "${env.schoolName}" creada. El administrador (${email}) entra con Google o con "Olvidé mi contraseña".`);
 }
 
 // Solo para la escuela de prueba: si SEED_DEMO_PASSWORD está definida, los usuarios de ejemplo

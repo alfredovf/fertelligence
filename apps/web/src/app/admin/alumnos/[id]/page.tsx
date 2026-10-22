@@ -3,7 +3,7 @@ import { RELATIONSHIPS } from "@fertelligence/core/services/consent";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ActionForm, SubmitButton } from "@/components/action-form";
-import { Card, Field, Input, Notice, PageHeader, Pill, Select, Table } from "@/components/ui";
+import { Card, Field, Input, LinkButton, Notice, PageHeader, Pill, Select, Table } from "@/components/ui";
 import { requireUser } from "@/lib/session";
 import { paperConsentAction, requestConsentAction, resendInvitationAction, revokeConsentAction, setPersonActiveAction, updatePersonAction } from "../../actions";
 import { PersonFields, StatusPill } from "../../person-form";
@@ -36,7 +36,7 @@ export default async function StudentPage({ params, searchParams }: { params: Pr
 
   return (
     <>
-      <PageHeader title={`${student.firstName} ${student.lastName}`} subtitle={<StatusPill status={student.status} />} back={{ href: "/admin/alumnos", label: "Alumnos" }} />
+      <PageHeader title={`${student.firstName} ${student.lastName}`} subtitle={<StatusPill status={student.status} />} back={{ href: "/admin/alumnos", label: "Alumnos" }} actions={<LinkButton href={`/admin/alumnos/${student.id}/progreso`}>Ver progreso</LinkButton>} />
       {creado && (
         <Notice tone="ok">
           Creamos al alumno.{" "}

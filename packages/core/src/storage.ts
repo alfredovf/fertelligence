@@ -7,7 +7,10 @@ export function getStorage(): S3Client {
   client ??= new S3Client({
     endpoint: env.storage.endpoint,
     region: env.storage.region,
-    forcePathStyle: Boolean(env.storage.endpoint), // MinIO necesita rutas, no subdominios
+    forcePathStyle: Boolean(env.storage.endpoint), // RustFS necesita rutas, no subdominios
+    // Google Cloud Storage (interoperabilidad S3) no acepta los checksums CRC32 que el SDK agrega por defecto.
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
     credentials:
       env.storage.accessKeyId && env.storage.secretAccessKey
         ? { accessKeyId: env.storage.accessKeyId, secretAccessKey: env.storage.secretAccessKey }

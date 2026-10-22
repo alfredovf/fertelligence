@@ -1,4 +1,5 @@
 import { prisma } from "@fertelligence/core/db";
+import { ACHIEVEMENTS, type AchievementKind } from "@fertelligence/core/services/achievements";
 import { readPreferences, studentProgress } from "@fertelligence/core/services/attempts";
 import { Card } from "@/components/ui";
 import { requireUser } from "@/lib/session";
@@ -10,12 +11,14 @@ export const metadata = { title: "Mi progreso · Fertelligence" };
 // Progreso centrado en la constancia. Las notas por materia aparecen cuando haya tareas corregidas.
 export default async function ProgressPage() {
   const user = await requireUser("STUDENT");
-  const [progress, cards, profile, settings] = await Promise.all([
+  const [progress, cards, profile, settings, earned] = await Promise.all([
     studentProgress(user.id),
     studentTasks(user.id),
     prisma.studentProfile.findUnique({ where: { userId: user.id } }),
     prisma.schoolSettings.findUnique({ where: { id: 1 } }),
+    prisma.achievement.findMany({ where: { studentId: user.id }, select: { kind: true, earnedAt: true } }),
   ]);
+  const earnedAt = new Map(earned.map((a) => [a.kind, a.earnedAt]));
   const showAchievements = (settings?.achievementsEnabled ?? true) && readPreferences(profile?.preferences).showAchievements;
   const corrected = cards.filter((c) => c.status === "CORRECTED" && c.grade !== null);
   const bySubject = [...new Set(corrected.map((c) => c.subject))].map((subject) => {
@@ -47,6 +50,27 @@ export default async function ProgressPage() {
           <div className="font-display text-3xl font-bold">{pending}</div>
         </div>
       </div>
+      {showAchievements && (
+        <Card title={`Logros (${earnedAt.size} de ${Object.keys(ACHIEVEMENTS).length})`}>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {(Object.keys(ACHIEVEMENTS) as AchievementKind[]).map((kind) => {
+              const a = ACHIEVEMENTS[kind];
+              const got = earnedAt.has(kind);
+              return (
+                <li key={kind} className={`flex items-center gap-3 rounded-xl border p-3 ${got ? "border-sun bg-sun-soft" : "border-dashed border-line"}`}>
+                  <span aria-hidden className={`grid size-10 shrink-0 place-items-center rounded-full font-display font-bold ${got ? "bg-sun text-ink" : "bg-sunk text-muted"}`}>
+                    {a.short}
+                  </span>
+                  <span>
+                    <span className="block font-bold">{a.label}</span>
+                    <span className="block text-xs text-muted">{got ? a.description : "Todavía no"}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </Card>
+      )}
       <Card title="Promedio por materia">
         {bySubject.length === 0 ? (
           <p className="text-muted">Cuando tus docentes corrijan tus tareas, vas a ver acá tu promedio en cada materia.</p>

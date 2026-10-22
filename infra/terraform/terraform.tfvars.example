@@ -1,0 +1,15 @@
+# Copiá este archivo como terraform.tfvars (no se sube al repositorio) y completalo.
+project_id = "fertelligence-prod"
+region     = "southamerica-east1"
+
+# Agregá cada secreto acá recién después de cargarle un valor con gcloud (ver infra/README.md).
+configured_secrets = ["GEMINI_API_KEY", "RESEND_API_KEY", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_PICKER_API_KEY"]
+
+mail_from = "Fertelligence <avisos@tu-dominio.com>"
+
+schools = {
+  "escuela-piloto" = {
+    name        = "Escuela Piloto"
+    admin_email = "direccion@escuela-piloto.edu.ar"
+  }
+}

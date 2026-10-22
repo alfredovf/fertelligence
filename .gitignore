@@ -9,3 +9,8 @@ next-env.d.ts
 .env.*.local
 npm-debug.log*
 .DS_Store
+
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate*
+infra/terraform/terraform.tfvars
